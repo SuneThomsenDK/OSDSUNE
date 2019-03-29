@@ -86,8 +86,8 @@
 				New-ItemProperty -Path $Reg -Name $Name01 -PropertyType $Type01 -Value $Value01 -Force | Out-Null
 				New-ItemProperty -Path $Reg -Name $Name02 -PropertyType $Type02 -Value $Value02 -Force | Out-Null
 				Write-Host "Attention: $Reg did not exist but were created." -ForegroundColor "Cyan"
-				Write-Host "Information: $Name01 were created with the following value $Value01" -ForegroundColor "Green"
-				Write-Host "Information: $Name02 were created with the following value $Value02" -ForegroundColor "Green"
+				Write-Host "Information: $Name01 were created in registry with the following value $Value01" -ForegroundColor "Green"
+				Write-Host "Information: $Name02 were created in registry with the following value $Value02" -ForegroundColor "Green"
 			}
 			else {
 				New-ItemProperty -Path $Reg -Name $Name01 -PropertyType $Type01 -Value $Value01 -Force | Out-Null
