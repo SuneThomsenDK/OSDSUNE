@@ -69,35 +69,34 @@
 	Robocopy $SourceWallpaper $DestinationWallpaper /MIR /R:120 /W:60 /NP /NJH
 
 	#=========================================================================================
-	#	Set LockScreenImage in Registry
+	#	Set Registry Settings
 	#=========================================================================================
 
 	$Reg = "HKLM:\Software\Policies\Microsoft\Windows\Personalization"
-	$Name = "LockScreenImage"
-	$Value = "$DestinationScreen\img100.jpg"
-	$Type = "String"
+	$Name01 = "LockScreenImage"
+	$Name02 = "NoChangingLockScreen"
+	$Value01 = "$DestinationScreen\img100.jpg"
+	$Value02 = "1"
+	$Type01 = "String"
+	$Type02 = "DWORD"
 
-		if (!(Test-Path $Reg)) {
-			New-Item -Path $Reg -Force | Out-Null
-			New-ItemProperty -Path $Reg -Name $Name -PropertyType $Type -Value $Value -Force | Out-Null
+		Try {
+			if (!(Test-Path $Reg)) {
+				New-Item -Path $Reg -Force | Out-Null
+				New-ItemProperty -Path $Reg -Name $Name01 -PropertyType $Type01 -Value $Value01 -Force | Out-Null
+				New-ItemProperty -Path $Reg -Name $Name02 -PropertyType $Type02 -Value $Value02 -Force | Out-Null
+				Write-Host "Attention: $Reg did not exist but were created." -ForegroundColor "Cyan"
+				Write-Host "Information: $Name01 were created with the following value $Value01" -ForegroundColor "Green"
+				Write-Host "Information: $Name02 were created with the following value $Value02" -ForegroundColor "Green"
+			}
+			else {
+				New-ItemProperty -Path $Reg -Name $Name01 -PropertyType $Type01 -Value $Value01 -Force | Out-Null
+				New-ItemProperty -Path $Reg -Name $Name02 -PropertyType $Type02 -Value $Value02 -Force | Out-Null
+				Write-Host "Information: Registry value $Value01 were set on $Reg\$Name01" -ForegroundColor "Green"
+				Write-Host "Information: Registry value $Value02 were set on $Reg\$Name02" -ForegroundColor "Green"
+			}
 		}
-		else {
-			New-ItemProperty -Path $Reg -Name $Name -PropertyType $Type -Value $Value -Force | Out-Null
-		}
-
-	#=========================================================================================
-	#	Disable Changing LockScreen in Registry
-	#=========================================================================================
-
-	$Reg = "HKLM:\Software\Policies\Microsoft\Windows\Personalization"
-	$Name = "NoChangingLockScreen"
-	$Value = "1"
-	$Type = "DWORD"
-
-		if (!(Test-Path $Reg)) {
-			New-Item -Path $Reg -Force | Out-Null
-			New-ItemProperty -Path $Reg -Name $Name -PropertyType $Type -Value $Value -Force | Out-Null
-		}
-		else {
-			New-ItemProperty -Path $Reg -Name $Name -PropertyType $Type -Value $Value -Force | Out-Null
+		Catch {
+			Write-Host "Warning: Something went wrong while setting registry settings." -ForegroundColor "Yellow"
+			Return $Null
 		}
