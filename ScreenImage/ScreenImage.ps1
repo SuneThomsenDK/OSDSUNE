@@ -10,10 +10,10 @@
 	it will replace the default images and set LockScreen settings in Registry.
 
 .NOTES
-	Version: 1.9.3.29
+	Version: 1.9.3.30
 	Author: Sune Thomsen
 	Creation date: 27-03-2019
-	Last modified date: 29-03-2019
+	Last modified date: 30-03-2019
 
 .LINK
 	https://github.com/SuneThomsenDK
@@ -28,34 +28,41 @@
 	#=========================================================================================
 	#	Source and Destination Path
 	#=========================================================================================
-
-	$Source4K = "$PSScriptRoot\4K"
-	$SourceScreen = "$PSScriptRoot\Screen"
-	$SourceWallpaper = "$PSScriptRoot\Wallpaper"
-	$Destination4K = "$Env:SystemRoot\Web\4K\Wallpaper\Windows"
-	$DestinationScreen = "$Env:SystemRoot\Web\Screen"
-	$DestinationWallpaper = "$Env:SystemRoot\Web\Wallpaper\Windows"
+	$Source4K = "$PSScriptRoot\4K".ToLower()
+	$SourceScreen = "$PSScriptRoot\Screen".ToLower()
+	$SourceWallpaper = "$PSScriptRoot\Wallpaper".ToLower()
+	$Destination4K = "$Env:SystemRoot\Web\4K\Wallpaper\Windows".ToLower()
+	$DestinationScreen = "$Env:SystemRoot\Web\Screen".ToLower()
+	$DestinationWallpaper = "$Env:SystemRoot\Web\Wallpaper\Windows".ToLower()
 
 	#=========================================================================================
-	#	Take Ownership of Files
+	#	Taking Ownership of the Files
 	#=========================================================================================
-
+	Write-Host "`n"
+	Write-Host "=========================================================================================" -ForegroundColor "DarkGray"
+	Write-Host "Taking ownership of the files"
+	Write-Host "=========================================================================================" -ForegroundColor "DarkGray"
 	TAKEOWN /f $Destination4K\*.*
 	TAKEOWN /f $DestinationScreen\*.*
 	TAKEOWN /f $DestinationWallpaper\*.*
+	Write-Host "`n"
+	Write-Host "`tAs every cat owner knows, nobody owns a cat ~ Ellen Perry Berkeley" -ForegroundColor "DarkGray"
+	Write-Host "`n"
 
 	#=========================================================================================
 	#	Set Permissions for SYSTEM Account
 	#=========================================================================================
-
+	Write-Host "=========================================================================================" -ForegroundColor "DarkGray"
+	Write-Host "Set permissions for SYSTEM account"
+	Write-Host "=========================================================================================" -ForegroundColor "DarkGray"
 	ICACLS $Destination4K\*.* /Grant 'System:(F)'
 	ICACLS $DestinationScreen\*.* /Grant 'System:(F)'
 	ICACLS $DestinationWallpaper\*.* /Grant 'System:(F)'
+	Write-Host "`n"
 
 	#=========================================================================================
 	#	Delete Destination Files
 	#=========================================================================================
-
 	Remove-Item $Destination4K\*.*
 	Remove-Item $DestinationScreen\*.*
 	Remove-Item $DestinationWallpaper\*.*
@@ -63,15 +70,19 @@
 	#=========================================================================================
 	#	Mirror Files from Source to Destination
 	#=========================================================================================
-
-	Robocopy $Source4K $Destination4K /MIR /R:120 /W:60 /NP /NJH
-	Robocopy $SourceScreen $DestinationScreen /MIR /R:120 /W:60 /NP /NJH
-	Robocopy $SourceWallpaper $DestinationWallpaper /MIR /R:120 /W:60 /NP /NJH
+	Write-Host "=========================================================================================" -ForegroundColor "DarkGray"
+	Write-Host "Mirror files from source to destination"
+	Write-Host "=========================================================================================" -ForegroundColor "DarkGray"
+	Robocopy $Source4K $Destination4K /MIR /R:120 /W:60 /NP /NS /NC /NDL /NJH
+	Robocopy $SourceScreen $DestinationScreen /MIR /R:120 /W:60 /NP /NS /NC /NDL /NJH
+	Robocopy $SourceWallpaper $DestinationWallpaper /MIR /R:120 /W:60 /NP /NS /NC /NDL /NJH
 
 	#=========================================================================================
 	#	Set Registry Settings
 	#=========================================================================================
-
+	Write-Host "=========================================================================================" -ForegroundColor "DarkGray"
+	Write-Host "Set registry settings"
+	Write-Host "=========================================================================================" -ForegroundColor "DarkGray"
 	$Reg = "HKLM:\Software\Policies\Microsoft\Windows\Personalization"
 	$Name01 = "LockScreenImage"
 	$Name02 = "NoChangingLockScreen"
