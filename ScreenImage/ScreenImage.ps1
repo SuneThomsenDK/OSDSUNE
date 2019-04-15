@@ -10,10 +10,10 @@
 	it will replace the default images and set LockScreen settings in Registry.
 
 .NOTES
-	Version: 1.9.3.30
+	Version: 1.9.4.15
 	Author: Sune Thomsen
 	Creation date: 27-03-2019
-	Last modified date: 30-03-2019
+	Last modified date: 15-04-2019
 
 .LINK
 	https://github.com/SuneThomsenDK
@@ -83,28 +83,44 @@
 	Write-Host "=========================================================================================" -ForegroundColor "DarkGray"
 	Write-Host "Set registry settings"
 	Write-Host "=========================================================================================" -ForegroundColor "DarkGray"
-	$Reg = "HKLM:\Software\Policies\Microsoft\Windows\Personalization"
+	$Reg01 = "HKLM:\Software\Policies\Microsoft\Windows\Personalization"
+	$Reg02 = "HKCU:\Control Panel\Desktop"
 	$Name01 = "LockScreenImage"
 	$Name02 = "NoChangingLockScreen"
+	$Name03 = "TranscodedImageCache"
+	$Name04 = "TranscodedImageCount"
+	$Name05 = "Wallpaper"
 	$Value01 = "$DestinationScreen\img100.jpg"
 	$Value02 = "1"
+	$Value03 = "$DestinationWallpaper\img0.jpg"
 	$Type01 = "String"
 	$Type02 = "DWORD"
 
 		Try {
-			if (!(Test-Path $Reg)) {
-				New-Item -Path $Reg -Force | Out-Null
-				New-ItemProperty -Path $Reg -Name $Name01 -PropertyType $Type01 -Value $Value01 -Force | Out-Null
-				New-ItemProperty -Path $Reg -Name $Name02 -PropertyType $Type02 -Value $Value02 -Force | Out-Null
-				Write-Host "Attention: $Reg did not exist but were created." -ForegroundColor "Cyan"
+			if (!(Test-Path $Reg01)) {
+				New-Item -Path $Reg01 -Force | Out-Null
+				New-ItemProperty -Path $Reg01 -Name $Name01 -PropertyType $Type01 -Value $Value01 -Force | Out-Null
+				New-ItemProperty -Path $Reg01 -Name $Name02 -PropertyType $Type02 -Value $Value02 -Force | Out-Null
+				Write-Host "Attention: $Reg01 did not exist but were created." -ForegroundColor "Cyan"
 				Write-Host "Information: $Name01 were created in registry with the following value $Value01" -ForegroundColor "Green"
 				Write-Host "Information: $Name02 were created in registry with the following value $Value02" -ForegroundColor "Green"
 			}
 			else {
-				New-ItemProperty -Path $Reg -Name $Name01 -PropertyType $Type01 -Value $Value01 -Force | Out-Null
-				New-ItemProperty -Path $Reg -Name $Name02 -PropertyType $Type02 -Value $Value02 -Force | Out-Null
-				Write-Host "Information: Registry value $Value01 were set on $Reg\$Name01" -ForegroundColor "Green"
-				Write-Host "Information: Registry value $Value02 were set on $Reg\$Name02" -ForegroundColor "Green"
+				New-ItemProperty -Path $Reg01 -Name $Name01 -PropertyType $Type01 -Value $Value01 -Force | Out-Null
+				New-ItemProperty -Path $Reg01 -Name $Name02 -PropertyType $Type02 -Value $Value02 -Force | Out-Null
+				Write-Host "Information: Registry value $Value01 were set on $Reg01\$Name01" -ForegroundColor "Green"
+				Write-Host "Information: Registry value $Value02 were set on $Reg01\$Name02" -ForegroundColor "Green"
+			}
+			if ((Test-Path $Reg02)) {
+				Remove-ItemProperty -Path $Reg02 -Name $Name03 -Force -ErrorAction SilentlyContinue | Out-Null
+				Remove-ItemProperty -Path $Reg02 -Name $Name04 -Force -ErrorAction SilentlyContinue | Out-Null
+				New-ItemProperty -Path $Reg02 -Name $Name05 -PropertyType $Type01 -Value $Value03 -Force | Out-Null
+				Write-Host "Information: $Reg02\$Name03 were deleted in registry" -ForegroundColor "Green"
+				Write-Host "Information: $Reg02\$Name04 were deleted in registry" -ForegroundColor "Green"
+				Write-Host "Information: Registry value $Value03 were set on $Reg02\$Name05" -ForegroundColor "Green"
+			}
+			else {
+				Write-Host "Attention: $Reg02 did not exist in registry." -ForegroundColor "Cyan"
 			}
 		}
 		Catch {
