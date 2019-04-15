@@ -12,7 +12,7 @@
 
 .NOTES
 
-	Version: 1.9.3.30
+	Version: 1.9.4.15
 	Author: Sune Thomsen
 	Creation date: 27-03-2019
-	Last modified date: 30-03-2019
+	Last modified date: 15-04-2019
