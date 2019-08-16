@@ -46,6 +46,8 @@
 	Removed:
 		- 
 
+	To use it for multi-language purpose execute this command: PowerShell.exe -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile -WindowStyle Hidden -File .\Show-ToastNotification.ps1
+
 .LINKS
 
 	https://www.imab.dk/windows-10-toast-notification-script/
