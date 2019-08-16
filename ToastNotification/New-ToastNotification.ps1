@@ -37,6 +37,7 @@
 		 - Date formatting
 		 - All text can now be edited directly in the XML file for multi language purpose
 		 - Log Path
+		 - Removed a few script errors showing while running it manually
 
 		Removed:
 		 -
@@ -380,7 +381,7 @@ if ($SCAppStatus -eq "True") {
 	}
 
 	# Make sure the app used with the action center is enabled
-	if ((Get-ItemProperty -Path "$RegPath\$App" -Name "Enabled").Enabled -ne "1") {
+	if ((Get-ItemProperty -Path "$RegPath\$App" -Name "Enabled" -ErrorAction SilentlyContinue).Enabled -ne "1") {
 		New-ItemProperty -Path "$RegPath\$App" -Name "Enabled" -Value 1 -PropertyType "DWORD" -Force
 	}
 }
@@ -399,7 +400,7 @@ if ($PSAppStatus -eq "True") {
 	}
 
 	# Make sure the app used with the action center is enabled
-	if ((Get-ItemProperty -Path "$RegPath\$App" -Name "ShowInActionCenter").ShowInActionCenter -ne "1") {
+	if ((Get-ItemProperty -Path "$RegPath\$App" -Name "ShowInActionCenter" -ErrorAction SilentlyContinue).ShowInActionCenter -ne "1") {
 		New-ItemProperty -Path "$RegPath\$App" -Name "ShowInActionCenter" -Value 1 -PropertyType "DWORD" -Force
 	}
 }
