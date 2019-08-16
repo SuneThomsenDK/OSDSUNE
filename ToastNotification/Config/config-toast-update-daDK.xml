@@ -16,7 +16,7 @@
 	<Option Name="DismissButton" Enabled="True" Value="Ikke nu" />	<!-- Enables or disables the dismiss button. Value is equal to the name displayed on the button -->
 	<Option Name="SnoozeButton" Enabled="True" Value="Udsæt" /> <!-- Enabling this option will always enable action button and dismiss button -->
 	<Option Name="Scenario" Type="reminder" />	<!-- Possible values are: reminder | short | long -->
-	<Option Name="Action" Value="softwarecenter:SoftwareID=ScopeId_1F66E866-16D8-424B-A296-1E09E2CB6BAA/Application_f0e8d4df-0da3-44ea-b039-ed36153ea1ee" />	<!-- Action taken when using the ActionButton. Can be link to SoftwareCenter if used with UpgradeOS -->
+	<Option Name="Action" Value="softwarecenter:Page=OSD" />	<!-- Action taken when using the ActionButton. Can be link to SoftwareCenter if used with UpgradeOS -->
 	<Text Option="GreetGivenName" Enabled="True" />	<!-- Displays the toast with a personal greeting using the users given name retrieved from AD -->
 	<Text Name="AttributionText">www.osdsune.com</Text>
 	<Text Name="HeaderText">Venlig påmindelse fra HelpDesk.</Text>
