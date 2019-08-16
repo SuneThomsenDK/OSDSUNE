@@ -34,7 +34,7 @@
 		Added ToastReboot protocol example, enabling the toast to carry out a potential reboot.
 
 	2019-08-16 Modified by @SuneThomsenDK
-	OSDSune https://www.osdsune.com/home/blog/2019/splash-screen-driver-bios-update
+	OSDSune https://www.osdsune.com/home/blog/2019/windows10-toast-notification
 	Added:
 		- Multi language support
 		- Several text variables in XML
