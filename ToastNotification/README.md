@@ -42,6 +42,7 @@
 	Changed:
 		- Date formatting
 		- All text can now be edited directly in the XML file for multi language purpose
+		- Log Path
 
 	Removed:
 		- 
