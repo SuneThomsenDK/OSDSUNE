@@ -23,13 +23,13 @@
 	Twitter: @mwbengtsson
 
     Version history:
-    	1.0
+    1.0
 		script created
-    	1.1
+    1.1
 		Separated checks for pending reboot in registry/WMI from OS uptime.
 		More checks for conflicting options in config.xml.
 		The content of the config.xml is now imported with UTF-8 encoding enabling other characters to be used in the text boxes.
-		1.2
+	1.2
 		Added option for personal greeting using given name retreived from Active Directory. If no AD available, the script will use a placeholder.
 		Added ToastReboot protocol example, enabling the toast to carry out a potential reboot.
 
