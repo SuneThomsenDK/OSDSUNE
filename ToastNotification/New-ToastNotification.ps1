@@ -83,8 +83,8 @@ function Write-Log {
 	Process
 	{
 		if ((Test-Path $Path)){
-		$LogSize = (Get-Item -Path $Path).Length/1MB
-		$MaxLogSize = 5
+			$LogSize = (Get-Item -Path $Path).Length/1MB
+			$MaxLogSize = 5
 		}
 
 		# Check for file size of the log. If greater than 5MB, it will create a new one and delete the old.
