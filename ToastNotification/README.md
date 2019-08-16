@@ -35,16 +35,16 @@
 
 	2019-08-16 Modified by @SuneThomsenDK
 	OSDSune https://www.osdsune.com/home/blog/2019/splash-screen-driver-bios-update
-		Added:
-		 - Multi language support
-		 - Several text variables in XML
+	Added:
+		- Multi language support
+		- Several text variables in XML
 
-		Changed:
-		 - Date formatting
-		 - All text can now be edited directly in the XML file for multi language purpose
+	Changed:
+		- Date formatting
+		- All text can now be edited directly in the XML file for multi language purpose
 
-		Removed:
-		 - 
+	Removed:
+		- 
 
 .LINKS
 
