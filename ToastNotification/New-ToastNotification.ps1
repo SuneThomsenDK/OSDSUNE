@@ -7,7 +7,7 @@
 	Config-toast.xml can be locally or set to an UNC path with the -Config parameter.
 	This way you can quickly modify the configuration without the need to push new files to the computer running the toast.
 	Can be used for improving the numbers in Windows Servicing as well as kindly reminding users of pending reboots.
-	All actions are logged to a local log file in programdata\ToastNotification\New-Toastnotificaion.log.
+	All actions are logged to a local log file in C:\Windows\Temp\New-Toastnotificaion.log
 
 .PARAMETER Config
 	Specify the path for the config.xml. If none is specificed, the script uses the local config.xml
