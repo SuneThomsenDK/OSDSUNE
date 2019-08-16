@@ -9,8 +9,8 @@
 	<Option Name="PendingRebootUptimeText" Enabled="False" Value="Your computer is required to restart due to having exceeded the maximum allowed uptime." />	<!-- Adds an additional group to the toast with text about the uptime of the computer -->
 	<Option Name="PendingRebootCheckText" Enabled="False" Value="Reason: Pending reboots was found in registry or WMI." />	<!--  -->
 	<Option Name="Deadline" Enabled="True" Value="30-09-2019 08:00" />	<!-- Adds an additional group to the toast with text about the deadline of the OSUpgrade. The value must be entered "dd-MM-yyyy HH:mm" it will be formatted to correct culture format by the PowerShell Script -->
-	<Option Name="UseSoftwareCenterApp" Enabled="True" />	<!-- The app in Windows doing the action notification - can't be both SoftwareCenter and Powershell -->
-	<Option Name="UsePowershellApp" Enabled="False" />	<!-- The app in Windows doing the action notification - can't be both SoftwareCenter and Powershell -->
+	<Option Name="UseSoftwareCenterApp" Enabled="False" />	<!-- The app in Windows doing the action notification - can't be both SoftwareCenter and Powershell -->
+	<Option Name="UsePowershellApp" Enabled="True" />	<!-- The app in Windows doing the action notification - can't be both SoftwareCenter and Powershell -->
 	<Option Name="CustomAudio" Enabled="False" TextToSpeech="Hey you - wake up. Your computer needs to restart. Do it now."/>
 	<Option Name="ActionButton" Enabled="True" Value="Installere" />	<!-- Enables or disables the action button. Value is equal to the name displayed on the button -->
 	<Option Name="DismissButton" Enabled="True" Value="Ikke nå" />	<!-- Enables or disables the dismiss button. Value is equal to the name displayed on the button -->
