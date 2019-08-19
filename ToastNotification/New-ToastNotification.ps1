@@ -30,14 +30,14 @@
 	2019-08-16 Modified by @SuneThomsenDK
 	OSDSune https://www.osdsune.com/home/blog/2019/windows10-toast-notification
 		Added:
-		 - Multi language support
-		 - Several text variables in XML
+		 - Multi-Language support
+		 - Several new text variables in XML config file
 
 		Changed:
 		 - Date formatting
-		 - All text can now be edited directly in the XML file for multi language purpose
+		 - All text can now be edited directly in the XML config file
 		 - Log Path
-		 - Removed a few script errors showing while running it manually
+		 - Removed a few script errors showing while running it manually in PowerShell ISE
 
 		Removed:
 		 -
