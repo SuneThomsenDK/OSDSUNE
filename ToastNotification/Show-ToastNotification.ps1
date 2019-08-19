@@ -3,7 +3,7 @@
 	Language detection for toasted notifications in Windows 10.
 
 .DESCRIPTION
-	This script will check for "System Local" language in registry.
+	This script will check for "System Locale" language in registry.
 	0414 = nb_NO
 	0406 = da_DK
 	0409 = en_US
