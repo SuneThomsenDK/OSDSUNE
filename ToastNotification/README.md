@@ -39,7 +39,7 @@
 		- Multi-Language support
 		- Several new text variables in XML config file
 		- Look in WMI for given name if no local AD is available.
-		- More log
+		- More Detailed logging
 
 	Changed:
 		- Date formatting
