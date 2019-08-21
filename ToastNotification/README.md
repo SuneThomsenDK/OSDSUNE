@@ -33,11 +33,13 @@
 		Added option for personal greeting using given name retreived from Active Directory. If no AD available, the script will use a placeholder.
 		Added ToastReboot protocol example, enabling the toast to carry out a potential reboot.
 
-	2019-08-16 Modified by @SuneThomsenDK
+	2019-08-21 Modified by @SuneThomsenDK
 	OSDSune https://www.osdsune.com/home/blog/2019/windows10-toast-notification
 	Added:
 		- Multi-Language support
 		- Several new text variables in XML config file
+		- Look in WMI for given name if no local AD is available.
+		- More log
 
 	Changed:
 		- Date formatting
