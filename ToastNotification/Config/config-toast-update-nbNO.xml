@@ -6,7 +6,7 @@
 	<Feature Name="PendingRebootCheck" Enabled="False" />	<!-- Enables the toast for reminding users of pending reboots found in registry/WMI -->
 	<Option Name="TargetOS" Build="18134" />	<!-- The actual build number of the targeted OS. 18351 = 1903 | 17763 = 1809. This option has no effect if OSUpgrade is set to False -->
 	<Option Name="MaxUptimeDays" Value="-6" />	<!-- When using the toast for checking for pending reboots. A reboot is considered pending if computer uptime exceeds the value set here -->
-	<Option Name="PendingRebootUptimeText" Enabled="False" Value="Your computer is required to restart due to having exceeded the maximum allowed uptime." />	<!-- Adds an additional group to the toast with text about the uptime of the computer -->
+	<Option Name="PendingRebootUptimeText" Enabled="False" Value="Datamaskinen din må starte på nytt på grunn av at den har overskredet den maksimale tillatte oppetiden." />	<!-- Adds an additional group to the toast with text about the uptime of the computer -->
 	<Option Name="PendingRebootCheckText" Enabled="False" Value="Reason: Pending reboots was found in registry or WMI." />	<!--  -->
 	<Option Name="Deadline" Enabled="True" Value="30-09-2019 08:00" />	<!-- Adds an additional group to the toast with text about the deadline of the OSUpgrade. The value must be entered "dd-MM-yyyy HH:mm" it will be formatted to correct culture format by the PowerShell Script -->
 	<Option Name="UseSoftwareCenterApp" Enabled="False" />	<!-- The app in Windows doing the action notification - can't be both SoftwareCenter and Powershell -->
@@ -20,9 +20,9 @@
 	<Text Option="GreetGivenName" Enabled="True" />	<!-- Displays the toast with a personal greeting using the users given name retrieved from AD -->
 	<Text Name="AttributionText">www.osdsune.com</Text>
 	<Text Name="HeaderText">Vennlig påminnelse fra HelpDesk.</Text>
-	<Text Name="TitleText">Drivere og BIOS er tilgjengelig!</Text>
-	<Text Name="BodyText1">Det er nye oppdateringer tilgjengelig. Gjør deg selv en tjeneste og installer dem selv. Det tar 10-40 minutter og krever en omstart av PCen... Ellers vil vi gjøre det for deg ;-)</Text>
-	<Text Name="BodyText2">Men ikke bekymre deg! Du vil motta en passende mengde påminnelser før noe skjer automatisk.</Text>
+	<Text Name="TitleText">Nye oppdateringer tilgjengelig!</Text>
+	<Text Name="BodyText1">Det er nye Dell drivere og BIOS oppdateringer tilgjengelig. Gjør deg selv en tjeneste og installer dem selv... Ellers vil vi gjøre det for deg ;-)</Text>
+	<Text Name="BodyText2">Det tar 10-40 minutter og krever en omstart av PCen. Men ikke bekymre deg, du vil motta en passende mengde påminnelser før noe skjer automatisk.</Text>
 	<Text Name="SnoozeText">Klikk på utsett for å bli påminnet igjen om:</Text>
 	<Text Name="DeadlineText">Din tidsfrist er:</Text>
 	<Text Name="GreetMorningText">God morgen</Text>
@@ -31,4 +31,6 @@
 	<Text Name="MinutesText">Minutter</Text>
 	<Text Name="HourText">Time</Text>
 	<Text Name="HoursText">Timer</Text>
+	<Text Name="ComputerUptimeText">Datamaskin oppetid:</Text>
+	<Text Name="ComputerUptimeDaysText">dager.</Text>
 </Configuration>

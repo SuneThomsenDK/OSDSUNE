@@ -20,9 +20,9 @@
 	<Text Option="GreetGivenName" Enabled="True" />	<!-- Displays the toast with a personal greeting using the users given name retrieved from AD -->
 	<Text Name="AttributionText">www.osdsune.com</Text>
 	<Text Name="HeaderText">Kindly reminder from HelpDesk.</Text>
-	<Text Name="TitleText">Drivers and BIOS are available!</Text>
-	<Text Name="BodyText1">There are new updates available. Do yourself a favor and install them yourself. It will take 10-40 minutes and require a restart of your PC... Or we will do it for you ;-)</Text>
-	<Text Name="BodyText2">But don't worry! You will receive an adequate amount of reminders before any actions are taken automatically.</Text>
+	<Text Name="TitleText">New updates available!</Text>
+	<Text Name="BodyText1">There are new Dell drivers and BIOS updates available. Do yourself a favor and install them yourself... Or we will do it for you ;-)</Text>
+	<Text Name="BodyText2">It will take 10-40 minutes and requires a restart of your PC. But don't worry, you will receive an adequate amount of reminders before any actions are taken automatically.</Text>
 	<Text Name="SnoozeText">Click Snooze to be reminded again in:</Text>
 	<Text Name="DeadlineText">Your deadline is:</Text>
 	<Text Name="GreetMorningText">Good morning</Text>
@@ -31,4 +31,6 @@
 	<Text Name="MinutesText">Minutes</Text>
 	<Text Name="HourText">Hour</Text>
 	<Text Name="HoursText">Hours</Text>
+	<Text Name="ComputerUptimeText">Computer uptime:</Text>
+	<Text Name="ComputerUptimeDaysText">days.</Text>
 </Configuration>
