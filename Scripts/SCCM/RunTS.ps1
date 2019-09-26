@@ -36,10 +36,10 @@ $RegName = "UpdateTime"
 $RegValue = "1908"
 $RegType = "String"
 
-	if (!(Test-Path $RegKey)){
+	if (!(Test-Path $RegKey)) {
 		New-Item -Path $RegKey -Force | Out-Null
 		New-ItemProperty -Path $RegKey -Name $RegName -PropertyType $RegType -Value $RegValue -Force | Out-Null
 	}
-	else{
+	else {
 		Set-ItemProperty -Path $RegKey -Name $RegName -Type $RegType -Value $RegValue -Force | Out-Null
 	}
