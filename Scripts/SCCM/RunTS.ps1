@@ -14,7 +14,7 @@
 	if (($SoftwareCenter)) {
 		$TaskSequence = $SoftwareCenter.GetAvailableApplications() | Where {$_.PackageName -eq "$TSName"}
 	
-		if (($taskSequence)) {
+		if (($TaskSequence)) {
 			$TaskSequenceProgramID = $TaskSequence.ID
 			$TaskSequencePackageID = $TaskSequence.PackageID
 			# Execute the task sequence
