@@ -11,7 +11,7 @@
 		Exit 1
 	}
 
-	if (($softwareCenter)) {
+	if (($SoftwareCenter)) {
 		$TaskSequence = $SoftwareCenter.GetAvailableApplications() | Where {$_.PackageName -eq "$TSName"}
 	
 		if (($taskSequence)) {
