@@ -31,7 +31,7 @@
 Execute-TaskSequence -TSName "Enter TS Name"
 
 # Application Detection Method
-$RegKey = "HKLM:\Software\SpecifyNameHere"
+$RegKey = "HKLM:\Software\Specify Name Here"
 $RegName = "UpdateTime"
 $RegValue = "1908"
 $RegType = "String"
