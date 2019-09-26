@@ -12,7 +12,7 @@
 	}
 
 	if (($softwareCenter)) {
-		$TaskSequence = $softwareCenter.GetAvailableApplications() | Where {$_.PackageName -eq "$TSName"}
+		$TaskSequence = $SoftwareCenter.GetAvailableApplications() | Where {$_.PackageName -eq "$TSName"}
 	
 		if (($taskSequence)) {
 			$TaskSequenceProgramID = $TaskSequence.ID
