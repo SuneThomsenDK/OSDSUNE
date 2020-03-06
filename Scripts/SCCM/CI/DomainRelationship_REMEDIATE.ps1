@@ -18,11 +18,17 @@
 #===============================================
 # Check if domain relationship is corrupt
 #===============================================
+
+#Create EncodedPass
+#$Password = 'Enter Admin Password Here'
+#$EncodedPass = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($Password))
+#$EncodedPass
+
     if (!(Test-ComputerSecureChannel)) {
-        $Secret = 'IwAxADAAbABOAG8AZwAxAGEAbgBkADEA'
-        $DecodedText = [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String($Secret))
-        $Username = 'MOE\Administrator'
-        $password = convertto-securestring -String $DecodedText -AsPlainText -Force
-        $ADRepairCred = new-object -typename System.Management.Automation.PSCredential -argumentlist $username, $password
+        $EncodedPass = 'RQBuAHQAZQByAEEAZABtAGkAbgBQAGEAcwBzAHcAbwByAGQASABlAHIAZQA'
+        $DecodedPass = [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String($EncodedPass))
+        $Username = 'DOMAIN\Administrator'
+        $Password = convertto-securestring -String $DecodedPass -AsPlainText -Force
+        $ADRepairCred = new-object -typename System.Management.Automation.PSCredential -argumentlist $Username, $Password
         Test-ComputerSecureChannel -Repair -Credential $ADRepairCred
     }
