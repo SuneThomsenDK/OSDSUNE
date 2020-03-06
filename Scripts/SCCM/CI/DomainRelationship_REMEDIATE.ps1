@@ -25,10 +25,17 @@
 #$EncodedPass
 
     if (!(Test-ComputerSecureChannel)) {
+    	$Compliance = "Non-Compliant"
         $EncodedPass = 'RQBuAHQAZQByAEEAZABtAGkAbgBQAGEAcwBzAHcAbwByAGQASABlAHIAZQA'
         $DecodedPass = [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String($EncodedPass))
         $Username = 'DOMAIN\Administrator'
         $Password = convertto-securestring -String $DecodedPass -AsPlainText -Force
         $ADRepairCred = new-object -typename System.Management.Automation.PSCredential -argumentlist $Username, $Password
         Test-ComputerSecureChannel -Repair -Credential $ADRepairCred
+	
+	# Check domain relationship again
+	if ((Test-ComputerSecureChannel)) {$Compliance = "Compliant"}
     }
+    else {$Compliance = "Compliant"}
+
+$Compliance
