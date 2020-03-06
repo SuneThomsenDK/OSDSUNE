@@ -5,9 +5,6 @@
 .DESCRIPTION
 	Check if domain relationship is corrupt
 
-	A special thanks go to Martin Bengtsson!
-	https://twitter.com/mwbengtsson
-
 .NOTES
 	Version: 1.0.0.1
 	Author: Sune Thomsen
