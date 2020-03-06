@@ -18,11 +18,7 @@
 #========================================
 # Check if domain relationship is corrupt
 #========================================
-    if (!(Test-ComputerSecureChannel)) {
-        $Compliance = "Non-Compliant"
-    }
-	else {
-		$Compliance = "Compliant"
-	}
+	if (!(Test-ComputerSecureChannel)) {$Compliance = "Non-Compliant"}
+	else {$Compliance = "Compliant"}
 
 $Compliance
