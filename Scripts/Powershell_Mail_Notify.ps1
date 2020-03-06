@@ -22,5 +22,5 @@ $HeadStyle = $HeadStyle + "</style>"
 $Object | ConvertTo-Html -Head $HeadStyle -Body "<h2>$($ENV:ComputerName) Report - $date</h2>" | Out-File $ReportLocation -Force
 
 if ((Get-item $ReportLocation).length -gt 2KB){
-Send-MailMessage -To $To -from $FROM -subject "XXX" -smtpServer $SMTPServer -Attachments $ReportLocation -Port $SMTPPort
+Send-MailMessage -To $To -from $FROM -subject "Disk Report" -smtpServer $SMTPServer -Attachments $ReportLocation -Port $SMTPPort
 }
