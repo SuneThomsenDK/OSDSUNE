@@ -41,7 +41,7 @@
 
 	MSI Example.
 
-	    Change this ->  $FilePath = Join-Path -Path "$MountDir" -ChildPath "app.msi"
+	    Change this ->  $FilePath = Join-Path -Path "$MountDir" -ChildPath "Setup.msi"
 	    Change this ->  $Process = "msiexec.exe"
 	    Change this ->  $Arguments = @(
 	                        "/I",
@@ -53,7 +53,7 @@
 
 	EXE Example.
 
-	    Change this ->  $FilePath = Join-Path -Path "$MountDir" -ChildPath "app.exe"
+	    Change this ->  $FilePath = Join-Path -Path "$MountDir" -ChildPath "Setup.exe"
 	    Change this ->  $Process = "cmd.exe"
 	    Change this ->  $Arguments = @(
 	                        "/c",
@@ -64,7 +64,7 @@
 
 	EXE Example. (Microsoft Office Professional Plus 2019)
 
-	    Change this ->  $FilePath = Join-Path -Path "$MountDir" -ChildPath "setup.exe"
+	    Change this ->  $FilePath = Join-Path -Path "$MountDir" -ChildPath "Setup.exe"
 	    Change this ->  $Process = "cmd.exe"
 	    Change this ->  $Arguments = @(
 	                        "/c",
