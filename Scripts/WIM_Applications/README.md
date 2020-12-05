@@ -27,7 +27,7 @@
 	      "/Compress:max" is no good if you are using deduplication. And I tend to listen to wise people ;)
 
 
-	CMD Example (Current).
+	CMD Example (Default).
 
 	                    $FilePath = Join-Path -Path "$MountDir" -ChildPath "Install.cmd"
 	                    $Process = "cmd.exe"
