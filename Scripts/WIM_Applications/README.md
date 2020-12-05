@@ -1,3 +1,4 @@
+<#
 .SYNOPSIS
 
 	Mount WIM, Install, Uninstall or Repair Application and Unmount WIM.
@@ -61,6 +62,18 @@
 	                        "&& Exit"
 	                    )
 
+	EXE Example. (Microsoft Office Professional Plus 2019)
+
+	    Change this ->  $FilePath = Join-Path -Path "$MountDir" -ChildPath "setup.exe"
+	    Change this ->  $Process = "cmd.exe"
+	    Change this ->  $Arguments = @(
+	                        "/c",
+	                        """$FilePath""",
+	                        "/Configure",
+	                        "$MountDir/$XML",
+	                        "&& Exit"
+	                    )
+
 
 	PS1 Example.
 
@@ -99,13 +112,13 @@
 
 	.
 	# Mount WIM to the default location, install the application, unmount WIM and cleanup the mount directory.
-	.\Invoke-AppDeploy.ps1 -DeploymentMode "Install" -AppName "Microsoft Office Professional Plus 2019"
+	.\Invoke-AppDeploy.ps1 -DeploymentMode "Install" -XML "Office-Configuration.xml" -AppName "Microsoft Office Professional Plus 2019"
 
 	# Mount WIM to the default location, repair the application, unmount WIM and cleanup the mount directory.
-	.\Invoke-AppDeploy.ps1 -DeploymentMode "Repair" -AppName "Microsoft Office Professional Plus 2019"
+	.\Invoke-AppDeploy.ps1 -DeploymentMode "Repair" -XML "Office-Configuration.xml" -AppName "Microsoft Office Professional Plus 2019"
 
 	# Mount WIM to the default location, uninstall the application, unmount WIM and cleanup the mount directory.
-	.\Invoke-AppDeploy.ps1 -DeploymentMode "Uninstall" -AppName "Microsoft Office Professional Plus 2019"
+	.\Invoke-AppDeploy.ps1 -DeploymentMode "Uninstall" -XML "Office-Uninstall.xml" -AppName "Microsoft Office Professional Plus 2019"
 
 	# Mount WIM to the default location, install the application, unmount WIM and cleanup the mount directory, with -Verbose added for troubleshooting purposes.
 	.\Invoke-AppDeploy.ps1 -DeploymentMode "Install" -AppName "Microsoft Office Professional Plus 2019" -Verbose
@@ -119,9 +132,17 @@
 	# Mount WIM to an custom location, use a custom log location, install the application, unmount WIM and cleanup the mount directory.
 	.\Invoke-AppDeploy.ps1 -MountDir "C:\Temp\Mount" -DeploymentMode "Install" -AppName "Microsoft Office Professional Plus 2019" -LogDir "C:\Temp\Log"
 
+	# Avaiable Microsoft Office configuration XML files in this WIM:
+		Office-Configuration.xml
+		Office-Uninstall.xml
+		Project-Configuration.xml
+		Project-Uninstall.xml
+		Visio-Configuration.xml
+		Visio-Uninstall.xml
+
 .NOTES
 
-	Version:       1.0.4
+	Version:       1.0.5
 	Filename:      Invoke-AppDeploy.ps1
 	Author:        Sune Thomsen
 	Contact:       @SuneThomsenDK
@@ -136,7 +157,9 @@
 	1.0.2 - (31-08-2020) Added Invoke-SplitLog function to the script, which will split logs when it become larger than 250KB.
 	1.0.3 - (01-09-2020) Added VERBOSE to the script.
 	1.0.4 - (06-10-2020) Added check for already mounted images.
+	1.0.5 - (05-12-2020) Added XML parameter for XML configuration used in Microsoft Office Click-To-Run installation.
 
 .LINK
 
 	https://github.com/SuneThomsenDK
+#>
