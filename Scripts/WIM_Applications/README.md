@@ -64,9 +64,9 @@
 
 	EXE Example. (Microsoft Office Professional Plus 2019)
 
-	    Change this ->  $FilePath = Join-Path -Path "$MountDir" -ChildPath "Setup.exe"
-	    Change this ->  $Process = "cmd.exe"
-	    Change this ->  $Arguments = @(
+	                    $FilePath = Join-Path -Path "$MountDir" -ChildPath "Setup.exe"
+	                    $Process = "cmd.exe"
+	                    $Arguments = @(
 	                        "/c",
 	                        """$FilePath""",
 	                        "/Configure",
@@ -99,6 +99,10 @@
 .PARAMETER LogDir
 
 	Changes the default location from "$env:SystemRoot\Temp" (C:\WINDOWS\Temp) to the location specified.
+
+.PARAMETER XML
+
+	Specify a XML configuration file for the application to be deployed, e.g. Office-Configuration.xml
 
 .PARAMETER AppName
 
@@ -147,7 +151,7 @@
 	Author:        Sune Thomsen
 	Contact:       @SuneThomsenDK
 	Created:       24-08-2020
-	Modified:      06-10-2020
+	Modified:      05-12-2020
 
 	Contributors:  @MDaugaard_DK
 
