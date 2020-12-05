@@ -1,7 +1,9 @@
 .SYNOPSIS
+
 	Mount WIM, Install, Uninstall or Repair Application and Unmount WIM.
 
 .DESCRIPTION
+
 	The purpose of this script is to mount a WIM containing an application that will
 	be installed, uninstalled or repaired and then unmount the WIM again.
 
@@ -74,21 +76,27 @@
 
 
 .PARAMETER MountDir
+
 	Changes the default location from ".\Mount" to the location specified.
 
 .PARAMETER SourceWIM
+
 	Changes the default location and filename from ".\Application.wim" to the location and filename specified.
 
 .PARAMETER LogDir
+
 	Changes the default location from "$env:SystemRoot\Temp" (C:\WINDOWS\Temp) to the location specified.
 
 .PARAMETER AppName
+
 	Specify a name of the application to be deployed, e.g. Microsoft Office Professional Plus 2019.
 
 .PARAMETER DeploymentMode
+
 	Specify whether to Install, Uninstall or Repair the application, e.g. .\Invoke-AppDeploy.ps1 -DeploymentMode "Install" -AppName "Microsoft Office Professional Plus 2019"
 
 .EXAMPLE
+
 	.
 	# Mount WIM to the default location, install the application, unmount WIM and cleanup the mount directory.
 	.\Invoke-AppDeploy.ps1 -DeploymentMode "Install" -AppName "Microsoft Office Professional Plus 2019"
@@ -112,6 +120,7 @@
 	.\Invoke-AppDeploy.ps1 -MountDir "C:\Temp\Mount" -DeploymentMode "Install" -AppName "Microsoft Office Professional Plus 2019" -LogDir "C:\Temp\Log"
 
 .NOTES
+
 	Version:       1.0.4
 	Filename:      Invoke-AppDeploy.ps1
 	Author:        Sune Thomsen
@@ -129,4 +138,5 @@
 	1.0.4 - (06-10-2020) Added check for already mounted images.
 
 .LINK
+
 	https://github.com/SuneThomsenDK
