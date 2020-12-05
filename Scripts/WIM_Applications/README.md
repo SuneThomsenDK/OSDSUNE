@@ -110,7 +110,7 @@
 
 .PARAMETER DeploymentMode
 
-	Specify whether to Install, Uninstall or Repair the application, e.g. .\Invoke-AppDeploy.ps1 -DeploymentMode "Install" -AppName "Microsoft Office Professional Plus 2019"
+	Specify whether to Install, Uninstall or Repair the application, e.g. .\Invoke-AppDeploy.ps1 -DeploymentMode "Install" -XML "Office-Configuration.xml" -AppName "Microsoft Office Professional Plus 2019"
 
 .EXAMPLE
 
