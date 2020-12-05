@@ -102,7 +102,7 @@
 	Specify a name of the application to be deployed, e.g. Microsoft Office Professional Plus 2019.
 
 .PARAMETER DeploymentMode
-	Specify whether to Install, Uninstall or Repair the application, e.g. .\Invoke-AppDeploy.ps1 -DeploymentMode "Install" -AppName "Microsoft Office Professional Plus 2019"
+	Specify whether to Install, Uninstall or Repair the application, e.g. .\Invoke-AppDeploy.ps1 -DeploymentMode "Install" -XML "Office-Configuration.xml" -AppName "Microsoft Office Professional Plus 2019"
 
 .EXAMPLE
 	.
@@ -116,24 +116,16 @@
 	.\Invoke-AppDeploy.ps1 -DeploymentMode "Uninstall" -XML "Office-Uninstall.xml" -AppName "Microsoft Office Professional Plus 2019"
 
 	# Mount WIM to the default location, install the application, unmount WIM and cleanup the mount directory, with -Verbose added for troubleshooting purposes.
-	.\Invoke-AppDeploy.ps1 -DeploymentMode "Install" -AppName "Microsoft Office Professional Plus 2019" -Verbose
+	.\Invoke-AppDeploy.ps1 -DeploymentMode "Install" -XML "Office-Configuration.xml" -AppName "Microsoft Office Professional Plus 2019" -Verbose
 
 	# Mount WIM to the default location, use a custom log location, install the application, unmount WIM and cleanup the mount directory.
-	.\Invoke-AppDeploy.ps1 -DeploymentMode "Install" -AppName "Microsoft Office Professional Plus 2019" -LogDir "C:\Temp\Log"
+	.\Invoke-AppDeploy.ps1 -DeploymentMode "Install" -XML "Office-Configuration.xml" -AppName "Microsoft Office Professional Plus 2019" -LogDir "C:\Temp\Log"
 
 	# Mount WIM to an custom location, install the application, unmount WIM and cleanup the mount directory.
-	.\Invoke-AppDeploy.ps1 -MountDir "C:\Temp\Mount" -DeploymentMode "Install" -AppName "Microsoft Office Professional Plus 2019"
+	.\Invoke-AppDeploy.ps1 -MountDir "C:\Temp\Mount" -DeploymentMode "Install" -XML "Office-Configuration.xml" -AppName "Microsoft Office Professional Plus 2019"
 
 	# Mount WIM to an custom location, use a custom log location, install the application, unmount WIM and cleanup the mount directory.
-	.\Invoke-AppDeploy.ps1 -MountDir "C:\Temp\Mount" -DeploymentMode "Install" -AppName "Microsoft Office Professional Plus 2019" -LogDir "C:\Temp\Log"
-
-	# Avaiable Microsoft Office configuration XML files in this WIM:
-		Office-Configuration.xml
-		Office-Uninstall.xml
-		Project-Configuration.xml
-		Project-Uninstall.xml
-		Visio-Configuration.xml
-		Visio-Uninstall.xml
+	.\Invoke-AppDeploy.ps1 -MountDir "C:\Temp\Mount" -DeploymentMode "Install" -XML "Office-Configuration.xml" -AppName "Microsoft Office Professional Plus 2019" -LogDir "C:\Temp\Log"
 
 .NOTES
 	Version:       1.0.5
@@ -180,7 +172,7 @@
 	[ValidateNotNullOrEmpty()]
 	[string]$AppName,
 
-	[Parameter(Mandatory = $true, HelpMessage = 'Specify whether to Install, Uninstall or Repair the application, e.g. Invoke-AppDeploy.ps1 -DeploymentMode "Install" -AppName "Microsoft Office Professional Plus 2019".')]
+	[Parameter(Mandatory = $true, HelpMessage = 'Specify whether to Install, Uninstall or Repair the application, e.g. .\Invoke-AppDeploy.ps1 -DeploymentMode "Install" -XML "Office-Configuration.xml" -AppName "Microsoft Office Professional Plus 2019"')]
 	[ValidateNotNullOrEmpty()]
 	[ValidateSet("Install", "Uninstall", "Repair")]
 	[string]$DeploymentMode
