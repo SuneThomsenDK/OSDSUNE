@@ -1,4 +1,3 @@
-<#
 .SYNOPSIS
 
 	Mount WIM, Install, Uninstall or Repair Application and Unmount WIM.
@@ -158,4 +157,3 @@
 .LINK
 
 	https://github.com/SuneThomsenDK
-#>
