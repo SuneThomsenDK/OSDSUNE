@@ -52,7 +52,7 @@
 	EXE Example.
 
 	    Change this ->  $FilePath = Join-Path -Path "$MountDir" -ChildPath "Setup.exe"
-	    Change this ->  $Process = "cmd.exe"
+	                    $Process = "cmd.exe"
 	    Change this ->  $Arguments = @(
 	                        "/c",
 	                        """$FilePath""",
@@ -60,7 +60,7 @@
 	                        "&& Exit"
 	                    )
 
-	EXE Example. (Microsoft Office Professional Plus 2019)
+	EXE Example (Microsoft Office Professional Plus 2019).
 
 	                    $FilePath = Join-Path -Path "$MountDir" -ChildPath "Setup.exe"
 	                    $Process = "cmd.exe"
