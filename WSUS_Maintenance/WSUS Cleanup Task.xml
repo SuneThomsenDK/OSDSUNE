@@ -2,7 +2,7 @@
 <Task version="1.4" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
   <RegistrationInfo>
     <Date>2021-01-10T11:27:30.7678058</Date>
-    <Author>OSDSUNE\Sune Thomsen</Author>
+    <Author>OSDSUNE\STN</Author>
     <Description>WSUSCleanupTask.ps1</Description>
     <URI>\WSUS Cleanup Task</URI>
   </RegistrationInfo>
