@@ -6,10 +6,10 @@ $UseSSL = $False
 $PortNumber = 8530
 $Server = "WSUS SERVER"
 $ReportLocation = "E:\WSUS\CleanupReport.html"
-$SMTPServer = "mail.domain.com"
-$SMTPPort = 25
-$To = "Full Name <user@domain.com>"
-$From = "System Notify <system.notify@domain.com>"
+# $SMTPServer = "mail.domain.com"
+# $SMTPPort = 25
+# $To = "Full Name <user@domain.com>"
+# $From = "System Notify <system.notify@domain.com>"
 $WSUSConnection = [Microsoft.UpdateServices.Administration.AdminProxy]::GetUpdateServer($Server,$UseSSL,$PortNumber)
 
 #Clean Up Scope
