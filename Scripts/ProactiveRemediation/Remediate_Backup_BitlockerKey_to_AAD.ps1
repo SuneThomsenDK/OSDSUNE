@@ -141,7 +141,7 @@ Function Invoke-SplitLog {
 	$LogFileName = "IntuneProactiveRemediation"
 	$Subject = "Bitlocker Key to AAD"
 
-	$RegistryPath = "HKLM:\Software\Xellia\Bitlocker"
+	$RegistryPath = "HKLM:\Software\CompanyName\Bitlocker"
 	$RegistryName = "BackedUpToAAD"
 	$RegistryType = "String"
 	$RegistryValue = "TRUE"
