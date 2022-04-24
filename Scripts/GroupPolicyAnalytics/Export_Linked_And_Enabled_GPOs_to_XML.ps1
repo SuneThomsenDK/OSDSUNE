@@ -1,6 +1,7 @@
 ﻿$OURoot = "DC=xxxxx,DC=local" # Add the domain root here.
 $OUName = "*" # Add specific OU name or use * for every OU.
 $GPOName = "" # Add a key word for the GPO you want to export or keep it empty to export every linked and enabled GPO.
+$ExportPath = "C:\temp"
 
 $OUs = Get-ADOrganizationalUnit -SearchBase $OURoot -Filter 'Name -like $OUName'
 
@@ -15,4 +16,4 @@ $LinkedGPOs = ForEach ($OU in $OUs){
  }
 }
 
-$LinkedGPOs | Sort-Object -Property DisplayName -Unique | ForEach-Object {Get-GPOReport -Name $_.DisplayName -ReportType XML -Path "C:\temp\$($_.DisplayName).xml"}
+$LinkedGPOs | Sort-Object -Property DisplayName -Unique | ForEach-Object {Get-GPOReport -Name $_.DisplayName -ReportType XML -Path "$ExportPath\$($_.DisplayName).xml"}
