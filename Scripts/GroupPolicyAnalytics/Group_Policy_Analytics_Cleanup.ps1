@@ -7,7 +7,7 @@ Connect-MSGraph
 
 $Get_GPO_Reports = (Invoke-MSGraphRequest -Url "https://graph.microsoft.com/beta/deviceManagement/groupPolicyMigrationReports" -HttpMethod GET).Value
 
-$Search = "*Add Key Word Here*"
+$Search = "*Add Keyword Here*"
 $Get_GPO = $Get_GPO_Reports | where {$_.ouDistinguishedName -like $Search}
 $Get_GPO_ID = $Get_GPO.ID
 
