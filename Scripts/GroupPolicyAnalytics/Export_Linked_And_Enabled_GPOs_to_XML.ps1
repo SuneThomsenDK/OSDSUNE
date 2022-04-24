@@ -1,6 +1,6 @@
 ﻿$OURoot = "DC=xxxxx,DC=local" # Add the domain root here.
 $OUName = "*" # Add specific OU name or use * for every OU.
-$GPOName = "" # Add a key word for the GPO you want to export or keep it empty to export every linked and enabled GPO.
+$GPOName = "" # Add a keyword for the GPO you want to export or keep it empty to export every linked and enabled GPO.
 $ExportPath = "C:\temp"
 
 $OUs = Get-ADOrganizationalUnit -SearchBase $OURoot -Filter 'Name -like $OUName'
