@@ -142,7 +142,7 @@ Function Invoke-SplitLog {
 	$Subject = "Bitlocker Key to AAD"
 
 	# Set bitlocker variable
-	# Used for detecting if mount point (drive letter) 'C:\' is protected by Bitlocker.
+	# Used for detecting if the mount point (drive letter) 'C:\' is protected by Bitlocker.
 	$BitlockerStatus = Get-BitLockerVolume -MountPoint C
 	
 	# Set registry variables
