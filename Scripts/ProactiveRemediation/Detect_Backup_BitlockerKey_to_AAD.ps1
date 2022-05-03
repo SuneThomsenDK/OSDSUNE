@@ -4,9 +4,9 @@
 
 .NOTES
 	Created on:   26-11-2021
-	Modified:     03-12-2021
+	Modified:     03-05-2022
 	Author:       Sune Thomsen
-	Version:      1.0.2
+	Version:      1.0.3
 	Mail:         stn@mindcore.dk
 	Twitter:      https://twitter.com/SuneThomsenDK
 
@@ -136,40 +136,61 @@ Function Invoke-SplitLog {
 
 # Proactive Remediation Script
 
-	# Set variables
+	# Set log variables
 	$LogDir = "$env:ProgramData\Microsoft\IntuneManagementExtension\Logs"
 	$LogFileName = "IntuneProactiveRemediation"
 	$Subject = "Bitlocker Key to AAD"
 
+	# Set bitlocker variable
+	# Used for detecting if mount point (drive letter) 'C:\' is protected by Bitlocker.
+	$BitlockerStatus = Get-BitLockerVolume -MountPoint C
+	
+	# Set registry variables
 	$RegistryPath = "HKLM:\Software\CompanyName\Bitlocker"
 	$RegistryName = "BackedUpToAAD"
-	$RegistryValue = "TRUE"
+	$RegistryValue = "True"
 
-	$GetRegistry = Get-ItemProperty $RegistryPath -Name $RegistryName -ErrorAction SilentlyContinue
-	$GetRegistryValue = $GetRegistry.$RegistryName
-
+	# Set event log variables
 	$EventLogTime = "12/03/2021 00:00:00"
 	$EventLogIDValue = "845"
-	$GetEventLog = Get-WinEvent -ProviderName Microsoft-Windows-BitLocker-API | Where-Object {($_.TimeCreated -gt $EventLogTime)}
-	$EventLogID = $GetEventLog.ID
 
-	Try {
-		If ((($GetRegistryValue -eq $RegistryValue)) -or (($EventLogID -eq $EventLogIDValue))) {
-			$Msg = "Bitlocker Key is backed up to Azure AD, do nothing."
-			Write-Host $Msg
-			Write-Log -Message "[$($Subject)]: $($Msg)"
-			Exit 0
+	If (($BitlockerStatus.ProtectionStatus -eq "On")) {
+		$Msg = "Mount point (drive letter) 'C:\' is protected by Bitlocker. The script will continue..."
+		Write-Host $Msg
+		Write-Log -Message "[$($Subject)]: $($Msg)"
+
+		# Set registry variables (Do NOT changes these variables.)
+		$GetRegistry = Get-ItemProperty $RegistryPath -Name $RegistryName -ErrorAction SilentlyContinue
+		$GetRegistryValue = $GetRegistry.$RegistryName
+
+		# Set event log variables (Do NOT changes these variables.)
+		$GetEventLog = Get-WinEvent -ProviderName Microsoft-Windows-BitLocker-API -ErrorAction SilentlyContinue | Where-Object {($_.TimeCreated -gt $EventLogTime)}
+		$EventLogID = $GetEventLog.ID
+
+		Try {
+			If ((($GetRegistryValue -eq $RegistryValue)) -or (($EventLogID -eq $EventLogIDValue))) {
+				$Msg = "Bitlocker Key is backed up to Azure AD, do nothing."
+				Write-Host $Msg
+				Write-Log -Message "[$($Subject)]: $($Msg)"
+				Exit 0
+			}
+			Else {
+				$Msg = "Bitlocker Key is NOT backed up to Azure AD. Starting remediation script..."
+				Write-Host $Msg
+				Write-Log -Message "[$($Subject)]: $($Msg)" -Severity 2
+				Exit 1
+			}
 		}
-		Else {
-			$Msg = "Bitlocker Key is NOT backed up to Azure AD. Starting remediation script..."
-			Write-Host $Msg
-			Write-Log -Message "[$($Subject)]: $($Msg)" -Severity 2
+		Catch {
+			$ErrMsg = $_.Exception.Message
+			Write-Log -Message "[$($Subject)]: The Proactive Remediation script failed. Error message at line $($_.InvocationInfo.ScriptLineNumber): $($ErrMsg)" -Severity 3
+			Write-Error $ErrMsg
 			Exit 1
 		}
 	}
-	Catch {
-		$ErrMsg = $_.Exception.Message
-		Write-Log -Message "[$($Subject)]: The Proactive Remediation script failed. Error message at line $($_.InvocationInfo.ScriptLineNumber): $($ErrMsg)" -Severity 3
-		Write-Error $ErrMsg
-		Exit 1
+	Else {
+		$Msg = "Mount point (drive letter) 'C:\' is NOT protected by Bitlocker. The script will exit! - Please turn on Bitlocker."
+		Write-Host $Msg
+		Write-Log -Message "[$($Subject)]: $($Msg)" -Severity 2
+		Exit 0
 	}
