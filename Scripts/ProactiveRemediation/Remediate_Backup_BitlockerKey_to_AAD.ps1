@@ -9,11 +9,11 @@
 	Version:      1.3
 	Mail:         stn@mindcore.dk
 	Twitter:      https://twitter.com/SuneThomsenDK
-	
+
 	Changelog:
 	----------
 	26-11-2021 - v1.0 - The Creation date of this script
-    03-05-2022 - v1.1 - Detection for Bitlocker protection status added to the script
+	03-05-2022 - v1.1 - Detection for Bitlocker protection status added to the script
 	17-06-2022 - v1.2 - New logic and better reporting have been added to the script
 	07-10-2022 - v1.3 - Code review and cleanup of the script
 
@@ -157,10 +157,10 @@ Function Invoke-SplitLog {
 	# Set event log variable(s)
 	$EventLogTime = "01/01/2022 00:00:00"
 	$EventLogIDValue = "845"
-	
+
 	# Set wait variable(s)
 	$WaitForWinEvent = 0
-	
+
 # Remediation - Do NOT make changes below this line unless you know what you are doing!
 $Msg = " ----------------------------------------------------- Remediation ----------------------------------------------------- "
 Write-Host $Msg

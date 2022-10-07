@@ -9,11 +9,11 @@
 	Version:      1.3
 	Mail:         stn@mindcore.dk
 	Twitter:      https://twitter.com/SuneThomsenDK
-	
+
 	Changelog:
 	----------
 	26-11-2021 - v1.0 - The Creation date of this script
-    03-05-2022 - v1.1 - Detection for Bitlocker protection status added to the script
+	03-05-2022 - v1.1 - Detection for Bitlocker protection status added to the script
 	17-06-2022 - v1.2 - New logic and better reporting have been added to the script
 	07-10-2022 - v1.3 - Code review and cleanup of the script
 
@@ -151,7 +151,7 @@ Function Invoke-SplitLog {
 	# Set bitlocker variabl(s)
 	# Used for detecting if the mount point (For example, drive letter 'C:\') is protected by Bitlocker.
 	$BitlockerStatus = (Get-BitLockerVolume -MountPoint "$env:SystemDrive").ProtectionStatus
-	
+
 	# Set registry variable(s)
 	$RegistryPath = "HKLM:\SOFTWARE\CompanyName\Bitlocker" # <---- Change "CompanyName" to your own company name.
 	$RegistryName = "BitlockerKeyToAAD"
