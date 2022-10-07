@@ -4,11 +4,18 @@
 
 .NOTES
 	Created on:   26-11-2021
-	Modified:     03-05-2022
+	Modified:     07-10-2022
 	Author:       Sune Thomsen
-	Version:      1.0.3
+	Version:      1.3
 	Mail:         stn@mindcore.dk
 	Twitter:      https://twitter.com/SuneThomsenDK
+	
+	Changelog:
+	----------
+	26-11-2021 - v1.0 - The Creation date of this script
+    03-05-2022 - v1.1 - Detection for Bitlocker protection status added to the script
+	17-06-2022 - v1.2 - New logic and better reporting have been added to the script
+	07-10-2022 - v1.3 - Code review and cleanup of the script
 
 .LINK
 	https://github.com/SuneThomsenDK
@@ -136,46 +143,49 @@ Function Invoke-SplitLog {
 
 # Proactive Remediation Script
 
-	# Set log variables
+	# Set log variable(s)
 	$LogDir = "$env:ProgramData\Microsoft\IntuneManagementExtension\Logs"
 	$LogFileName = "IntuneProactiveRemediation"
-	$Subject = "Bitlocker Key to AAD"
+	$Subject = "Bitlocker key to AAD"
 
-	# Set bitlocker variable
-	# Used for detecting if the mount point (drive letter) 'C:\' is protected by Bitlocker.
-	$BitlockerStatus = Get-BitLockerVolume -MountPoint C
+	# Set bitlocker variabl(s)
+	# Used for detecting if the mount point (For example, drive letter 'C:\') is protected by Bitlocker.
+	$BitlockerStatus = (Get-BitLockerVolume -MountPoint "$env:SystemDrive").ProtectionStatus
 	
-	# Set registry variables
-	$RegistryPath = "HKLM:\Software\CompanyName\Bitlocker"
-	$RegistryName = "BackedUpToAAD"
+	# Set registry variable(s)
+	$RegistryPath = "HKLM:\SOFTWARE\CompanyName\Bitlocker" # <---- Change "CompanyName" to your own company name.
+	$RegistryName = "BitlockerKeyToAAD"
 	$RegistryValue = "True"
 
-	# Set event log variables
-	$EventLogTime = "12/03/2021 00:00:00"
+	# Set event log variable(s)
+	$EventLogTime = "01/01/2022 00:00:00"
 	$EventLogIDValue = "845"
 
-	If (($BitlockerStatus.ProtectionStatus -eq "On")) {
-		$Msg = "Mount point (drive letter) 'C:\' is protected by Bitlocker. The script will continue..."
-		Write-Host $Msg
+# Detection - Do NOT make changes below this line unless you know what you are doing!
+$Msg = " ----------------------------------------------------- Detection ----------------------------------------------------- "
+Write-Host $Msg
+Write-Log -Message "[$($Subject)]: $($Msg)"
+
+	If (($BitlockerStatus -eq "On")) {
+		$Msg = "Mount point '$("$env:SystemDrive")' is protected by Bitlocker. The script will continue..."
+		Write-Host "PROTECTED: $($Msg)"
 		Write-Log -Message "[$($Subject)]: $($Msg)"
 
-		# Set registry variables (Do NOT changes these variables.)
-		$GetRegistry = Get-ItemProperty $RegistryPath -Name $RegistryName -ErrorAction SilentlyContinue
-		$GetRegistryValue = $GetRegistry.$RegistryName
+		# Set registry variable(s) - Do NOT changes these variables!
+		$GetRegistryValue = (Get-ItemProperty $RegistryPath -ErrorAction SilentlyContinue).$RegistryName
 
-		# Set event log variables (Do NOT changes these variables.)
-		$GetEventLog = Get-WinEvent -ProviderName Microsoft-Windows-BitLocker-API -ErrorAction SilentlyContinue | Where-Object {($_.TimeCreated -gt $EventLogTime)}
-		$EventLogID = $GetEventLog.ID
+		# Set event log variable(s) - Do NOT changes these variables!
+		$GetEventLogID = (Get-WinEvent -ProviderName Microsoft-Windows-BitLocker-API -ErrorAction SilentlyContinue | Where-Object {($_.TimeCreated -gt $EventLogTime) -and ($_.ID -match "$EventLogIDValue")}).ID | Sort-Object -Unique
 
 		Try {
-			If ((($GetRegistryValue -eq $RegistryValue)) -or (($EventLogID -eq $EventLogIDValue))) {
-				$Msg = "Bitlocker Key is backed up to Azure AD, do nothing."
+			If ((($GetRegistryValue -eq $RegistryValue)) -or (($GetEventLogID -eq $EventLogIDValue))) {
+				$Msg = "Bitlocker key(s) is stored in Azure AD, do nothing."
 				Write-Host $Msg
 				Write-Log -Message "[$($Subject)]: $($Msg)"
 				Exit 0
 			}
 			Else {
-				$Msg = "Bitlocker Key is NOT backed up to Azure AD. Starting remediation script..."
+				$Msg = "Bitlocker key(s) is NOT stored in Azure AD. Starting remediation script..."
 				Write-Host $Msg
 				Write-Log -Message "[$($Subject)]: $($Msg)" -Severity 2
 				Exit 1
@@ -189,8 +199,8 @@ Function Invoke-SplitLog {
 		}
 	}
 	Else {
-		$Msg = "Mount point (drive letter) 'C:\' is NOT protected by Bitlocker. The script will exit! - Please turn on Bitlocker."
-		Write-Host $Msg
+		$Msg = "Bitlocker protection status on mount point '$("$env:SystemDrive")' is = $((Get-BitLockerVolume -MountPoint "$env:SystemDrive").ProtectionStatus). Ensure that the Bitlocker protection is turned on and not temporarily suspended."
+		Write-Host "NOT PROTECTED: $($Msg)"
 		Write-Log -Message "[$($Subject)]: $($Msg)" -Severity 2
 		Exit 0
 	}

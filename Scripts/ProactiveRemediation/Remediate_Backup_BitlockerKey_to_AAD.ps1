@@ -4,11 +4,18 @@
 
 .NOTES
 	Created on:   26-11-2021
-	Modified:     03-05-2022
+	Modified:     07-10-2022
 	Author:       Sune Thomsen
-	Version:      1.0.3
+	Version:      1.3
 	Mail:         stn@mindcore.dk
 	Twitter:      https://twitter.com/SuneThomsenDK
+	
+	Changelog:
+	----------
+	26-11-2021 - v1.0 - The Creation date of this script
+    03-05-2022 - v1.1 - Detection for Bitlocker protection status added to the script
+	17-06-2022 - v1.2 - New logic and better reporting have been added to the script
+	07-10-2022 - v1.3 - Code review and cleanup of the script
 
 .LINK
 	https://github.com/SuneThomsenDK
@@ -136,49 +143,60 @@ Function Invoke-SplitLog {
 
 # Proactive Remediation Script
 
-	# Set log variables
+	# Set log variable(s)
 	$LogDir = "$env:ProgramData\Microsoft\IntuneManagementExtension\Logs"
 	$LogFileName = "IntuneProactiveRemediation"
-	$Subject = "Bitlocker Key to AAD"
+	$Subject = "Bitlocker key to AAD"
 
-	# Set registry variables
-	$RegistryPath = "HKLM:\Software\CompanyName\Bitlocker"
-	$RegistryName = "BackedUpToAAD"
-	$RegistryType = "String"
+	# Set registry variable(s)
+	$RegistryPath = "HKLM:\SOFTWARE\CompanyName\Bitlocker" # <---- Change "CompanyName" to your own company name.
+	$RegistryName = "BitlockerKeyToAAD"
+	$RegistryType = "STRING"
 	$RegistryValue = "True"
 
-	# Set event log variables
-	$EventLogTime = "12/03/2021 00:00:00"
+	# Set event log variable(s)
+	$EventLogTime = "01/01/2022 00:00:00"
 	$EventLogIDValue = "845"
+	
+	# Set wait variable(s)
+	$WaitForWinEvent = 0
+	
+# Remediation - Do NOT make changes below this line unless you know what you are doing!
+$Msg = " ----------------------------------------------------- Remediation ----------------------------------------------------- "
+Write-Host $Msg
+Write-Log -Message "[$($Subject)]: $($Msg)"
 
-	# Set registry variables (Do NOT changes these variables.)
-	$GetRegistry = Get-ItemProperty $RegistryPath -Name $RegistryName -ErrorAction SilentlyContinue
-	$GetRegistryValue = $GetRegistry.$RegistryName
+	# Set registry variable(s) - Do NOT changes these variables!
+	$GetRegistryValue = (Get-ItemProperty $RegistryPath -ErrorAction SilentlyContinue).$RegistryName
 
-	# Set event log variables (Do NOT changes these variables.)
-	$GetEventLog = Get-WinEvent -ProviderName Microsoft-Windows-BitLocker-API -ErrorAction SilentlyContinue | Where-Object {($_.TimeCreated -gt $EventLogTime)}
-	$EventLogID = $GetEventLog.ID
+	# Set event log variable(s) - Do NOT changes these variables!
+	$GetEventLogID = (Get-WinEvent -ProviderName Microsoft-Windows-BitLocker-API -ErrorAction SilentlyContinue | Where-Object {($_.TimeCreated -gt $EventLogTime) -and ($_.ID -match "$EventLogIDValue")}).ID | Sort-Object -Unique
 
-		If ((!($GetRegistryValue -eq $RegistryValue)) -and (!($EventLogID -eq $EventLogIDValue))) {
-			Try {
-				$BLV = Get-BitLockerVolume -MountPoint "C:"
-				$BLV = $BLV.KeyProtector | Where-Object {$_.keyProtectorType -eq "RecoveryPassword"}
+	If ((!($GetRegistryValue -eq $RegistryValue)) -and (!($GetEventLogID -eq $EventLogIDValue))) {
+		Try {
+			# Set Birlocker variable(s) - Do NOT changes these variables!
+			$BLV = (Get-BitLockerVolume -MountPoint "$env:SystemDrive").KeyProtector | Where-Object {$_.keyProtectorType -eq "RecoveryPassword"}
 
-				Foreach ($Member in $BLV) {
-					BackupToAAD-BitLockerKeyProtector -MountPoint "C:" -KeyProtectorId $Member.KeyProtectorId
-					$Msg = "The Key Protector ID: $($Member.KeyProtectorID) was backed up to Azure AD."
-					Write-Host $Msg
-					Write-Log -Message "[$($Subject)]: $($Msg)"
-				}
-				# Wait for Event Log to be created
-				Start-Sleep -s 15
+			Foreach ($Member in $BLV) {
+				BackupToAAD-BitLockerKeyProtector -MountPoint "$env:SystemDrive" -KeyProtectorId $Member.KeyProtectorId | Out-Null
+				$Msg = "The Key Protector ID: $($Member.KeyProtectorID) will be backed up to Azure AD."
+				Write-Host $Msg
+				Write-Log -Message "[$($Subject)]: $($Msg)"
+			}
 
-				# Okay, let´s check if bitlocker key has been successfully backed up to Azure AD.
-				# Set variables
-				$GetEventLog = Get-WinEvent -ProviderName Microsoft-Windows-BitLocker-API | Where-Object {($_.TimeCreated -gt $EventLogTime)}
-				$EventLogID = $GetEventLog.ID
+			# Wait for Event log to be created - It will time-out after 30 minutes!
+			$Msg = "Wait for Bitlocker key(s) to be transferred to Azure AD..."
+			Write-Host $Msg
+			Write-Log -Message "[$($Subject)]: $($Msg)"
 
-				If (($EventLogID -eq $EventLogIDValue)) {
+			while ($WaitForWinEvent -lt 180) {
+
+				# Set event log variable(s) - Do NOT changes these variables!
+				$GetEventLogID = (Get-WinEvent -ProviderName Microsoft-Windows-BitLocker-API -ErrorAction SilentlyContinue | Where-Object {($_.TimeCreated -gt $EventLogTime) -and ($_.ID -match "$EventLogIDValue")}).ID | Sort-Object -Unique
+
+				Start-Sleep -Seconds 5
+
+				If (($GetEventLogID -eq $EventLogIDValue)) {
 					If (!(Test-Path $RegistryPath)) {
 						New-Item -Path $RegistryPath -Force | Out-Null
 						New-ItemProperty -Path $RegistryPath -Name $RegistryName -PropertyType $RegistryType -Value $RegistryValue -Force | Out-Null
@@ -187,28 +205,44 @@ Function Invoke-SplitLog {
 						Set-ItemProperty -Path $RegistryPath -Name $RegistryName -Type $RegistryType -Value $RegistryValue -Force | Out-Null
 					}
 
-					$Msg = "Bitlocker Key was successfully backed up to Azure AD."
+					$Msg = "Bitlocker key(s) was transferred to Azure AD. The script will continue..."
 					Write-Host $Msg
 					Write-Log -Message "[$($Subject)]: $($Msg)"
-					Exit 0
+					$WaitForWinEvent = 180
 				}
-				Else {
-					$Msg = "The Proactive Remediation script failed to backup bitlocker key to Azure AD."
+				else {
+					$Msg = "Whoopsie... Transferring the Bitlocker key(s) to Azure AD is taking a bit longer than expected! - The script will try again in 10 seconds."
 					Write-Host $Msg
-					Write-Log -Message "[$($Subject)]: $($Msg)" -Severity 3
-					Exit 1
+					Write-Log -Message "[$($Subject)]: $($Msg)" -Severity 2
+					Start-Sleep -Seconds 5
 				}
+				$WaitForWinEvent++
 			}
-			Catch {
-				$ErrMsg = $_.Exception.Message
-				Write-Log -Message "[$($Subject)]: The Proactive Remediation script failed. Error message at line $($_.InvocationInfo.ScriptLineNumber): $($ErrMsg)" -Severity 3
-				Write-Error $ErrMsg
+
+			# Okay, let's check if bitlocker key has been successfully backed up to Azure AD.
+			If (($GetEventLogID -eq $EventLogIDValue)) {
+				$Msg = "Bitlocker key(s) was successfully backed up to Azure AD."
+				Write-Host $Msg
+				Write-Log -Message "[$($Subject)]: $($Msg)"
+				Exit 0
+			}
+			Else {
+				$Msg = "The Proactive Remediation script failed to backup Bitlocker key(s) to Azure AD."
+				Write-Host $Msg
+				Write-Log -Message "[$($Subject)]: $($Msg)" -Severity 3
 				Exit 1
 			}
 		}
-		Else {
-			$Msg = "Bitlocker Key is backed up to Azure AD, do nothing."
-			Write-Host $Msg
-			Write-Log -Message "[$($Subject)]: $($Msg)"
-			Exit 0
+		Catch {
+			$ErrMsg = $_.Exception.Message
+			Write-Log -Message "[$($Subject)]: The Proactive Remediation script failed. Error message at line $($_.InvocationInfo.ScriptLineNumber): $($ErrMsg)" -Severity 3
+			Write-Error $ErrMsg
+			Exit 1
 		}
+	}
+	Else {
+		$Msg = "Bitlocker key(s) is stored in Azure AD, do nothing."
+		Write-Host $Msg
+		Write-Log -Message "[$($Subject)]: $($Msg)"
+		Exit 0
+	}
