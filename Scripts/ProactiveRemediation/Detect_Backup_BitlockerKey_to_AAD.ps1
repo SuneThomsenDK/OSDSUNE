@@ -2,11 +2,17 @@
 .DESCRIPTION
 	Detection script will check if bitlocker key has been backed up to Azure AD.
 
+	The recommended settings in Endpoint analytics | Proactive remediations
+
+		Run this script using the logged-on credentials: No
+		Enforce script signature check: No
+		Run script in 64-bit PowerShell: Yes
+
 .NOTES
 	Created on:   26-11-2021
-	Modified:     07-10-2022
+	Modified:     09-10-2022
 	Author:       Sune Thomsen
-	Version:      1.3
+	Version:      1.4
 	Mail:         stn@mindcore.dk
 	Twitter:      https://twitter.com/SuneThomsenDK
 
@@ -16,6 +22,7 @@
 	03-05-2022 - v1.1 - Detection for Bitlocker protection status added to the script
 	17-06-2022 - v1.2 - New logic and better reporting have been added to the script
 	07-10-2022 - v1.3 - Code review and cleanup of the script
+	09-10-2022 - v1.4 - Minor changes to the script output
 
 .LINK
 	https://github.com/SuneThomsenDK
@@ -158,8 +165,8 @@ Function Invoke-SplitLog {
 	$RegistryValue = "True"
 
 	# Set event log variable(s)
-	$EventLogTime = "01/01/2022 00:00:00"
-	$EventLogIDValue = "845"
+	$EventLogTime = "01/01/2022 00:00:00" # <---- MM/dd/yyyy HH:mm:ss
+	$EventLogIDValue = "845" # <---- Do NOT change this value!
 
 # Detection - Do NOT make changes below this line unless you know what you are doing!
 $Msg = " ----------------------------------------------------- Detection ----------------------------------------------------- "
@@ -168,7 +175,7 @@ Write-Log -Message "[$($Subject)]: $($Msg)"
 
 	If (($BitlockerStatus -eq "On")) {
 		$Msg = "Mount point '$("$env:SystemDrive")' is protected by Bitlocker. The script will continue..."
-		Write-Host "PROTECTED: $($Msg)"
+		Write-Host $Msg
 		Write-Log -Message "[$($Subject)]: $($Msg)"
 
 		# Set registry variable(s) - Do NOT changes these variables!
@@ -180,21 +187,21 @@ Write-Log -Message "[$($Subject)]: $($Msg)"
 		Try {
 			If ((($GetRegistryValue -eq $RegistryValue)) -or (($GetEventLogID -eq $EventLogIDValue))) {
 				$Msg = "Bitlocker key(s) is stored in Azure AD, do nothing."
-				Write-Host $Msg
+				Write-Host "PROTECTED - ALL IS OK: $($Msg)"
 				Write-Log -Message "[$($Subject)]: $($Msg)"
 				Exit 0
 			}
 			Else {
 				$Msg = "Bitlocker key(s) is NOT stored in Azure AD. Starting remediation script..."
-				Write-Host $Msg
+				Write-Host "PROTECTED - START REMEDIATION: $($Msg)"
 				Write-Log -Message "[$($Subject)]: $($Msg)" -Severity 2
 				Exit 1
 			}
 		}
 		Catch {
-			$ErrMsg = $_.Exception.Message
-			Write-Log -Message "[$($Subject)]: The Proactive Remediation script failed. Error message at line $($_.InvocationInfo.ScriptLineNumber): $($ErrMsg)" -Severity 3
-			Write-Error $ErrMsg
+			$Msg = "The Proactive Remediation script failed. Error message at line $($_.InvocationInfo.ScriptLineNumber): $($_.Exception.Message)"
+			Write-Host "ERROR: $($Msg)"
+			Write-Log -Message "[$($Subject)]: $Msg" -Severity 3
 			Exit 1
 		}
 	}
