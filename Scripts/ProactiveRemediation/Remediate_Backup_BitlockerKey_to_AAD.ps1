@@ -1,8 +1,8 @@
 <#
 .DESCRIPTION
-	Remediation script will try to backup bitlocker key to Azure AD.
+	The remediation script will try to backup the bitlocker key to Azure AD.
 
-	The recommended settings in Endpoint analytics | Proactive remediations
+	Recommended settings for the script package in Endpoint analytics | Proactive remediations.
 
 		Run this script using the logged-on credentials: No
 		Enforce script signature check: No

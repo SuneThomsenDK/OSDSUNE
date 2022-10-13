@@ -1,8 +1,8 @@
 <#
 .DESCRIPTION
-	Detection script will check if bitlocker key has been backed up to Azure AD.
+	The detection script will check if the device is protected by bitlocker and check if the bitlocker key is stored in Azure AD.
 
-	The recommended settings in Endpoint analytics | Proactive remediations
+	Recommended settings for the script package in Endpoint analytics | Proactive remediations.
 
 		Run this script using the logged-on credentials: No
 		Enforce script signature check: No
