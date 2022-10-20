@@ -10,9 +10,9 @@
 
 .NOTES
 	Created on:   26-11-2021
-	Modified:     09-10-2022
+	Modified:     20-10-2022
 	Author:       Sune Thomsen
-	Version:      1.4
+	Version:      1.5
 	Mail:         stn@mindcore.dk
 	Twitter:      https://twitter.com/SuneThomsenDK
 
@@ -23,6 +23,7 @@
 	17-06-2022 - v1.2 - New logic and better reporting have been added to the script
 	07-10-2022 - v1.3 - Code review and cleanup of the script
 	09-10-2022 - v1.4 - Minor changes to the script output
+	20-10-2022 - v1.5 - Minor changes to the detection of Bitlocker protection status and script output
 
 .LINK
 	https://github.com/SuneThomsenDK
@@ -155,6 +156,10 @@ Function Invoke-SplitLog {
 	$LogFileName = "IntuneProactiveRemediation"
 	$Subject = "Bitlocker key to AAD"
 
+	# Set bitlocker variabl(s)
+	# Used for detecting if the mount point (For example, drive letter 'C:\') is protected by Bitlocker.
+	$BitlockerStatus = (Get-BitLockerVolume -MountPoint "$env:SystemDrive").ProtectionStatus
+
 	# Set registry variable(s)
 	$RegistryPath = "HKLM:\SOFTWARE\CompanyName\Bitlocker" # <---- Change "CompanyName" to your own company name.
 	$RegistryName = "BitlockerKeyToAAD"
@@ -172,6 +177,13 @@ Function Invoke-SplitLog {
 $Msg = " ----------------------------------------------------- Remediation ----------------------------------------------------- "
 Write-Host $Msg
 Write-Log -Message "[$($Subject)]: $($Msg)"
+
+	If (($BitlockerStatus -eq "Off")) {
+		$Msg = "Bitlocker protection status on mount point '$("$env:SystemDrive")' is = $((Get-BitLockerVolume -MountPoint "$env:SystemDrive").ProtectionStatus). Ensure that the Bitlocker protection is turned on and not temporarily suspended."
+		Write-Host $Msg
+		Write-Log -Message "[$($Subject)]: $($Msg)" -Severity 2
+		Exit 1
+	}
 
 	# Set registry variable(s) - Do NOT changes these variables!
 	$GetRegistryValue = (Get-ItemProperty $RegistryPath -ErrorAction SilentlyContinue).$RegistryName
@@ -231,27 +243,27 @@ Write-Log -Message "[$($Subject)]: $($Msg)"
 			# Okay, let's check if the Bitlocker key has been successfully backed up to Azure AD.
 			If (($GetEventLogID -eq $EventLogIDValue)) {
 				$Msg = "Bitlocker key(s) was successfully backed up to Azure AD."
-				Write-Host "SUCCESS: $($Msg)"
+				Write-Host $Msg
 				Write-Log -Message "[$($Subject)]: $($Msg)"
 				Exit 0
 			}
 			Else {
 				$Msg = "The Proactive Remediation script failed to backup Bitlocker key(s) to Azure AD."
-				Write-Host "FAILED: $($Msg)"
+				Write-Host $Msg
 				Write-Log -Message "[$($Subject)]: $($Msg)" -Severity 3
 				Exit 1
 			}
 		}
 		Catch {
 			$Msg = "The Proactive Remediation script failed. Error message at line $($_.InvocationInfo.ScriptLineNumber): $($_.Exception.Message)"
-			Write-Host "ERROR: $($Msg)"
+			Write-Host $Msg
 			Write-Log -Message "[$($Subject)]: $Msg" -Severity 3
 			Exit 1
 		}
 	}
 	Else {
 		$Msg = "Bitlocker key(s) is stored in Azure AD, do nothing."
-		Write-Host "ALL IS OK: $($Msg)"
+		Write-Host $Msg
 		Write-Log -Message "[$($Subject)]: $($Msg)"
 		Exit 0
 	}

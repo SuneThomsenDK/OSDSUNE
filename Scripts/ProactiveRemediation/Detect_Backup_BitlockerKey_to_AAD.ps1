@@ -10,9 +10,9 @@
 
 .NOTES
 	Created on:   26-11-2021
-	Modified:     09-10-2022
+	Modified:     20-10-2022
 	Author:       Sune Thomsen
-	Version:      1.4
+	Version:      1.5
 	Mail:         stn@mindcore.dk
 	Twitter:      https://twitter.com/SuneThomsenDK
 
@@ -23,6 +23,7 @@
 	17-06-2022 - v1.2 - New logic and better reporting have been added to the script
 	07-10-2022 - v1.3 - Code review and cleanup of the script
 	09-10-2022 - v1.4 - Minor changes to the script output
+	20-10-2022 - v1.5 - Minor changes to the detection of Bitlocker protection status and script output
 
 .LINK
 	https://github.com/SuneThomsenDK
@@ -209,5 +210,5 @@ Write-Log -Message "[$($Subject)]: $($Msg)"
 		$Msg = "Bitlocker protection status on mount point '$("$env:SystemDrive")' is = $((Get-BitLockerVolume -MountPoint "$env:SystemDrive").ProtectionStatus). Ensure that the Bitlocker protection is turned on and not temporarily suspended."
 		Write-Host "NOT PROTECTED: $($Msg)"
 		Write-Log -Message "[$($Subject)]: $($Msg)" -Severity 2
-		Exit 0
+		Exit 1
 	}
