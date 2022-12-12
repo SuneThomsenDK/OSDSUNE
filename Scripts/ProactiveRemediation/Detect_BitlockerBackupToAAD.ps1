@@ -65,13 +65,13 @@
 		The only mandatory parameter in this function is the registry key parameter.
 
 		-------------------------------------------------------
-		Registry Hive				Abbreviation
+		Registry Hive               Abbreviation
 		-------------------------------------------------------
-		HKEY_LOCAL_MACHINE			HKLM
-		HKEY_CURRENT_USER			HKCU
-		HKEY_USERS					HKU
-		HKEY_CURRENT_CONFIG			HKCC
-		HKEY_CLASSES_ROOT			HKCR
+		HKEY_LOCAL_MACHINE          HKLM
+		HKEY_CURRENT_USER           HKCU
+		HKEY_USERS                  HKU
+		HKEY_CURRENT_CONFIG         HKCC
+		HKEY_CLASSES_ROOT           HKCR
 		-------------------------------------------------------
 
 		Valid examples (HKEY_LOCAL_MACHINE)

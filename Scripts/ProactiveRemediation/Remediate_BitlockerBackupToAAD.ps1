@@ -65,13 +65,13 @@
 		The only mandatory parameter in this function is the registry key parameter.
 
 		-------------------------------------------------------
-		Registry Hive				Abbreviation
+		Registry Hive               Abbreviation
 		-------------------------------------------------------
-		HKEY_LOCAL_MACHINE			HKLM
-		HKEY_CURRENT_USER			HKCU
-		HKEY_USERS					HKU
-		HKEY_CURRENT_CONFIG			HKCC
-		HKEY_CLASSES_ROOT			HKCR
+		HKEY_LOCAL_MACHINE          HKLM
+		HKEY_CURRENT_USER           HKCU
+		HKEY_USERS                  HKU
+		HKEY_CURRENT_CONFIG         HKCC
+		HKEY_CLASSES_ROOT           HKCR
 		-------------------------------------------------------
 
 		Valid examples (HKEY_LOCAL_MACHINE)
@@ -99,23 +99,23 @@
 		Be aware that the registry key, name, and type parameters in this function are mandatory.
 
 		-------------------------------------------------------
-		Registry Hive				Abbreviation
+		Registry Hive               Abbreviation
 		-------------------------------------------------------
-		HKEY_LOCAL_MACHINE			HKLM
-		HKEY_CURRENT_USER			HKCU
-		HKEY_USERS					HKU
-		HKEY_CURRENT_CONFIG			HKCC
-		HKEY_CLASSES_ROOT			HKCR
+		HKEY_LOCAL_MACHINE          HKLM
+		HKEY_CURRENT_USER           HKCU
+		HKEY_USERS                  HKU
+		HKEY_CURRENT_CONFIG         HKCC
+		HKEY_CLASSES_ROOT           HKCR
 		--------------------------------------------------------------------------------------------------------------
-		Registry Types				Description
+		Registry Types              Description
 		--------------------------------------------------------------------------------------------------------------
-		String						Specifies a null-terminated string. Equivalent to REG_SZ.
-		ExpandString				Specifies a null-terminated string that contains unexpanded references to environment variables that are expanded when the value is retrieved. Equivalent to REG_EXPAND_SZ.
-		Binary						Specifies binary data in any form. Equivalent to REG_BINARY.
-		DWord						Specifies a 32-bit binary number. Equivalent to REG_DWORD.
-		MultiString					Specifies an array of null-terminated strings terminated by two null characters. Equivalent to REG_MULTI_SZ.
-		Qword						Specifies a 64-bit binary number. Equivalent to REG_QWORD.
-		Unknown						Indicates an unsupported registry data type, such as REG_RESOURCE_LIST.
+		String                      Specifies a null-terminated string. Equivalent to REG_SZ.
+		ExpandString                Specifies a null-terminated string that contains unexpanded references to environment variables that are expanded when the value is retrieved. Equivalent to REG_EXPAND_SZ.
+		Binary                      Specifies binary data in any form. Equivalent to REG_BINARY.
+		DWord                       Specifies a 32-bit binary number. Equivalent to REG_DWORD.
+		MultiString                 Specifies an array of null-terminated strings terminated by two null characters. Equivalent to REG_MULTI_SZ.
+		Qword                       Specifies a 64-bit binary number. Equivalent to REG_QWORD.
+		Unknown                     Indicates an unsupported registry data type, such as REG_RESOURCE_LIST.
 		--------------------------------------------------------------------------------------------------------------
 
 		Valid examples (HKEY_LOCAL_MACHINE)
