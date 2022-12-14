@@ -356,7 +356,7 @@ Function Check-EventLog {
 			$CheckEventProvider = (Get-WinEvent -ListProvider $EventProviderName -ErrorAction 'SilentlyContinue').Name
 
 			If (!($CheckEventProvider)) {
-				$Msg = "The event provider name does not exists. - Please specify a valid event provider name."
+				$Msg = "The event provider name does not exist. - Please specify a valid event provider name."
 				Throw $Msg
 			}
 		}
