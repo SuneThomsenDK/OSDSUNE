@@ -129,6 +129,7 @@
 	09-10-2022 - v1.4 - Minor changes to the script output
 	20-10-2022 - v1.5 - Minor changes to the detection of Bitlocker protection status and script output
 	09-12-2022 - v2.0 - The script has been rewritten and now contains a prerequisite check, new logic, structure, functions, etc.
+	04-05-2022 - v2.1 - Minor changes to the Write-Log function.
 
 .LINK
 	https://github.com/SuneThomsenDK
@@ -269,7 +270,7 @@ Function Write-Log {
 
 	## Creating timestamp for the log entry
 	If (([String]::IsNullOrWhitespace($LogTime))) {
-		[String]$LogTime = (Get-Date -Format 'HH:mm:ss.fffffff')
+		[String]$LogTime = (Get-Date -Format 'HH":"mm":"ss"."fffffff')
 	}
 	If (([String]::IsNullOrWhitespace($LogDate))) {
 		[String]$LogDate = (Get-Date -Format 'MM-dd-yyyy')
