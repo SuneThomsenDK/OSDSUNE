@@ -23,14 +23,11 @@
 	Scenario: The script is not running in 64-bit PowerShell.
 	Output: "PREREQ: The script is not running in 64-bit PowerShell. - Please run the script in 64-bit PowerShell."
 
-	Scenario: The system drive (For example, 'C:') is not protected by Bitlocker.
-	Output: "NOT PROTECTED: Bitlocker protection status on system drive 'C:' is = Off. - Please ensure that the Bitlocker protection is turned on and not temporarily suspended."
-
-	Scenario: Bitlocker recovery key(s) is stored in Azure AD.
-	Output: "PROTECTED - ALL IS OK: Bitlocker recovery key(s) is stored in Azure AD, do nothing."
+	Scenario: The drive (For example, 'C:') is not protected by Bitlocker.
+	Output: "NOT PROTECTED: Bitlocker protection status on drive 'C:' is = Off. - Please ensure that the Bitlocker protection is turned on and not temporarily suspended."
 
 	Scenario: Bitlocker recovery key(s) is not stored in Azure AD.
-	Output: "PROTECTED - START REMEDIATION: Bitlocker recovery key(s) is not stored in Azure AD. - Starting remediation script..."
+	Output: "PROTECTED - RUN REMEDIATION: Bitlocker recovery key(s) is not stored in Azure AD. - Run remediation script..."
 
 	Scenario: The proactive remediation script failed.
 	Output: "ERROR: Whoopsie... Something failed at line 36: Error message"
@@ -49,14 +46,26 @@
 			2 = Warning
 			3 = Error
 
-		Valid examples:
-		Write-Log -Message "You message here"
-		Write-Log -Message "You message here" -ComponentName "Demo"
-		Write-Log -Message "You message here" -ComponentName "Demo" -Severity "3"
+		Valid example(s):
+		Write-Log -Message "CMTrace, is the best log viewer on the planet!"
+		Write-Log -Message "CMTrace, is the best log viewer on the planet!" -ComponentName "Demo"
+		Write-Log -Message "CMTrace, is the best log viewer on the planet!" -ComponentName "Demo" -Severity "3"
 
 	Function (Split-Log)
 
 		This function is called by the Write-Log function to split the log file when it reaches the specified max size.
+
+	Function (Check-EventLog)
+
+		You can use this function with the default pre-defined variables or specify your values when calling the function.
+		Be aware that all parameters in this function are mandatory!
+
+		Valid example(s):
+		Check-EventLog -EventProviderName "Microsoft-Windows-BitLocker-API" -EventMessage "volume C: was backed up successfully to your Azure AD." -EventTime "01/01/2022 00:00:00" -EventID "845"
+
+	Function (Convert-RegistryKey)
+
+		This function is called by the Check-RegistryKey function to convert the registry key hive to the full path.
 
 	Function (Check-RegistryKey)
 
@@ -74,39 +83,39 @@
 		HKEY_CLASSES_ROOT           HKCR
 		-------------------------------------------------------
 
-		Valid examples (HKEY_LOCAL_MACHINE)
+		Valid example(s) (HKEY_LOCAL_MACHINE):
 		Check-RegistryKey -Key "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name "(Default)" -Value ""
 		Check-RegistryKey -Key "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name "SystemRoot" -Value "C:\WINDOWS"
 		Check-RegistryKey -Key "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name "SystemRoot" -Value ""
 		Check-RegistryKey -Key "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name "" -Value ""
 
-		Valid examples (HKEY_CURRENT_USER)
+		Valid example(s) (HKEY_CURRENT_USER):
 		Check-RegistryKey -Key "HKCU:\Control Panel\Desktop" -Name "(Default)" -Value ""
 		Check-RegistryKey -Key "HKCU:\Control Panel\Desktop" -Name "WallPaper" -Value "C:\Windows\web\wallpaper\Windows\img19.jpg"
 		Check-RegistryKey -Key "HKCU:\Control Panel\Desktop" -Name "WallPaper" -Value ""
 		Check-RegistryKey -Key "HKCU:\Control Panel\Desktop" -Name "" -Value ""
 
-		Valid examples (HKEY_CLASSES_ROOT)
+		Valid example(s) (HKEY_CLASSES_ROOT):
 		Check-RegistryKey -Key "HKCR:\MIME\Database\Content Type\application/hta" -Name "(Default)" -Value ""
 		Check-RegistryKey -Key "HKCR:\MIME\Database\Content Type\application/hta" -Name "Extension" -Value ".hta"
 		Check-RegistryKey -Key "HKCR:\MIME\Database\Content Type\application/hta" -Name "Extension" -Value ""
 		Check-RegistryKey -Key "HKCR:\MIME\Database\Content Type\application/hta" -Name "" -Value ""
 
-	Function (Convert-RegistryKey)
-
-		This function is called by the Check-RegistryKey function to convert the registry key hive to the full path.
-
-	Function (Check-EventLog)
-
-		You can use this function with the default pre-defined variables or specify your values when calling the function.
-		Be aware that all parameters in this function are mandatory.
-
-		Valid examples:
-		Check-EventLog -EventProviderName "Microsoft-Windows-BitLocker-API" -EventTime "01/01/2022 00:00:00" -EventID "845"
-
 	Function (Check-BitlockerProtectionStatus)
 
-		This function is called to check if the system drive (For example, 'C:') is protected by Bitlocker.
+		This function is called to check if the drive (For example, 'C:') is protected by Bitlocker.
+
+	Function (Check-BitlockerVolumeStatus)
+
+		This function is called to check if the drive (For example, 'C:') is fully encrypted by Bitlocker.
+
+	Function (Exit-Script)
+
+		This function is called to exit the script based on an exit code. - It does also support an exit message (Write-Output).
+		The only mandatory parameter in this function is the exit code parameter.
+
+		Valid example(s):
+		Exit-Script -ExitCode "1" -ExitMessage "Remediation is required."
 
 .PARAMETER
 
@@ -114,9 +123,9 @@
 
 .NOTES
 	Created on:   26-11-2021
-	Modified:     09-12-2022
+	Modified:     17-11-2023
 	Author:       Sune Thomsen
-	Version:      2.0
+	Version:      3.1
 	Mail:         stn@mindcore.dk
 	Twitter:      https://twitter.com/SuneThomsenDK
 
@@ -130,6 +139,8 @@
 	20-10-2022 - v1.5 - Minor changes to the detection of Bitlocker protection status and script output
 	09-12-2022 - v2.0 - The script has been rewritten and now contains a prerequisite check, new logic, structure, functions, etc.
 	04-05-2022 - v2.1 - Minor changes to the Write-Log function.
+	09-06-2023 - v3.0 - The script has been rewritten to support multiple fixed drives. -> Set the "$Global:CheckAllDrives" to "$true" under "Set system variable(s)" if you want the script to check all available fixed drives.
+	06-10-2023 - v3.1 - Minor changes to the script output
 
 .LINK
 	https://github.com/SuneThomsenDK
@@ -138,13 +149,22 @@
 ## Variables
 ## Set the global variable(s) used throughout the script
 
-	## Set syestem variable(s)
+	## Set system variable(s)
 	[String]$Global:ScriptName = $MyInvocation.MyCommand.Name
-	[String]$Global:SystemDrive = $env:SystemDrive
 	[String]$Global:UserName = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 	[Bool]$Global:IsPowerShell64bitVersion = [Environment]::Is64BitProcess
 	[Bool]$Global:IsSystemContext = [System.Security.Principal.WindowsIdentity]::GetCurrent().IsSystem
-	[Bool]$Global:SkipPrereq = $false
+	[Bool]$Global:SkipPrereq = $false ## <---- Change this to "$true" if you want the script to skip the prerequisite check. (Default is $false)
+	[Bool]$Global:CheckAllDrives = $false ## <---- Change this to "$true" if you want the script to check all available fixed drives. (Default is $false)
+	[Array]$OutputMsgArray = $Null
+	[Array]$OutputMsgArray = @()
+
+		If (($Global:CheckAllDrives)) {
+			[Array]$Global:GetDrives = (get-wmiobject -class win32_logicaldisk | where {$_.DriveType -eq "3"}).DeviceID
+		}
+		Else {
+			[String]$Global:GetDrives = $env:SystemDrive
+		}
 
 	## Set log variable(s)
 	[String]$Global:LogLocation = "$env:ProgramData\Microsoft\IntuneManagementExtension\Logs"
@@ -155,17 +175,25 @@
 
 	## Set registry variable(s)
 	[String]$Global:DefaultRegistryKey = "HKLM:\SOFTWARE\CompanyName\Bitlocker" ## <---- Change "CompanyName" to your own company name.
-	[String]$Global:DefaultRegistryName = "BitlockerBackupToAAD"
+	[String]$Global:DefaultRegistryName = "Drive_{0}_BitlockerBackupToAAD"
 	[String]$Global:DefaultRegistryValue = "True"
 
 	## Set event log variable(s)
 	[String]$Global:DefaultEventProviderName = "Microsoft-Windows-BitLocker-API"
+	[String]$Global:DefaultEventMessage = "volume {0} was backed up successfully to your Azure AD."
 	[DateTime]$Global:DefaultEventTime = "01/01/2022 00:00:00" ## <---- MM/dd/yyyy HH:mm:ss
 	[Int]$Global:DefaultEventID = "845"
 
+	## Set exit variable(s)
+	[Int]$Global:ExitCode = 0
+
+	## ----------------------------------------------------------------------- ##
+	## Do NOT make changes below this line unless you know what you are doing! ##
+	## ----------------------------------------------------------------------- ##
+
 ## Detection
 $Detection = {
-	## Detection - Do NOT make changes below this line unless you know what you are doing!
+	## Invoke detection
 	$Msg = (" ----------------------------------------------------- Invoke Detection ({0}) ----------------------------------------------------- " -f $Global:UserName)
 	Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg)
 
@@ -177,19 +205,24 @@ $Detection = {
 		If (!($Global:SkipPrereq)) {
 			If (!($Global:IsSystemContext)) {
 				$Msg = "The script is not running under the system account. - Please run the script as system."
-				Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 2
-				Write-Output ("PREREQ: {0}" -f $Msg)
-				Exit 1
+				Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 3
+				$Global:OutputMsgArray += ("PREREQ: {0}" -f $Msg)
+				$Global:ExitCode = 1
 			}
 			ElseIf (!($Global:IsPowerShell64bitVersion)) {
 				$Msg = "The script is not running in 64-bit PowerShell. - Please run the script in 64-bit PowerShell."
-				Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 2
-				Write-Output ("PREREQ: {0}" -f $Msg)
-				Exit 1
+				Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 3
+				$Global:OutputMsgArray += ("PREREQ: {0}" -f $Msg)
+				$Global:ExitCode = 1
 			}
 			Else {
 				$Msg = "Prerequisite check passed. - The script will continue..."
 				Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg)
+			}
+
+			If (!($Global:ExitCode -eq 0)) {
+				$OutputMsg = '[{0}]' -f ($Global:OutputMsgArray -join '] + [')
+				Exit-Script -ExitCode $Global:ExitCode -ExitMessage $OutputMsg
 			}
 		}
 		Else {
@@ -197,40 +230,49 @@ $Detection = {
 			Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 2
 		}
 
-		## The script is detecting if the system drive (For example, 'C:') is protected by Bitlocker.
-		If (((Check-BitlockerProtectionStatus) -eq 'On')) {
-			$Msg = ("System drive '{0}' is protected by Bitlocker. - The script will continue..." -f $Global:SystemDrive)
-			Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg)
-		}
-		Else {
-			$Msg = ("Bitlocker protection status of system drive '{0}' is = {1}. - Please ensure that the Bitlocker protection is turned on and not temporarily suspended." -f $Global:SystemDrive, $Global:GetBitlockerProtectionStatus)
-			Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 2
-			Write-Output ("NOT PROTECTED: {0}" -f $Msg)
-			Exit 1
-		}
+		Foreach ($Global:Drive in $Global:GetDrives) {
+			## The script is detecting if the drive (For example, 'C:') is protected and fully encrypted by Bitlocker.
+			If (((Check-BitlockerVolumeStatus) -match 'FullyEncrypted')) {
+				$Msg = ("Drive '{0}' is fully encrypted by Bitlocker. - The script will continue..." -f $Global:Drive)
+				Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg)
+			
+				If (((Check-BitlockerProtectionStatus) -eq 'On')) {
+					$Msg = ("Drive '{0}' is protected by Bitlocker. - The script will continue..." -f $Global:Drive)
+					Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg)
 
-		## The script checks the event log or the registry to see if the Bitlocker recovery key(s) has been stored in Azure AD.
-		$Msg = "The script checks the event log or registry to see if the Bitlocker recovery key(s) has been stored in Azure AD."
-		Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg)
+					## The script checks the event log or the registry to see if the Bitlocker recovery key(s) has been stored in Azure AD.
+					$Msg = "The script checks the event log or registry to see if the Bitlocker recovery key(s) has been stored in Azure AD."
+					Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg)
 
-		If (((Check-EventLog)) -or ((Check-RegistryKey))) {
-			$Msg = "Bitlocker recovery key(s) is stored in Azure AD, do nothing."
-			Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg)
-			Write-Output ("PROTECTED - ALL IS OK: {0}" -f $Msg)
-			Exit 0
-		}
-		Else {
-			$Msg = "Bitlocker recovery key(s) is not stored in Azure AD. - Starting remediation script..."
-			Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 2
-			Write-Output ("PROTECTED - START REMEDIATION: {0}" -f $Msg)
-			Exit 1
+					If (((Check-EventLog)) -or ((Check-RegistryKey))) {
+						$Msg = ("Bitlocker recovery key(s) from drive '{0}' is stored in Azure AD, do nothing." -f $Global:Drive)
+						Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg)
+					}
+					Else {
+						$Msg = ("Bitlocker recovery key(s) from drive '{0}' is not stored in Azure AD. - Run remediation script..." -f $Global:Drive)
+						Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 2
+						$Global:OutputMsgArray += ("PROTECTED - RUN REMEDIATION: {0}" -f $Msg)
+						$Global:ExitCode = 1
+					}
+				}
+				Else {
+					$Msg = ("Bitlocker protection status of drive '{0}' is = {1}. - Please ensure that the Bitlocker protection is turned on and not temporarily suspended." -f $Global:Drive, $Global:GetBitlockerProtectionStatus)
+					Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 3
+					$Global:OutputMsgArray += ("NOT PROTECTED: {0}" -f $Msg)
+					$Global:ExitCode = 1
+				}
+			}
+			Else {
+				$Msg = ("Bitlocker encryption status of drive '{0}' is = {1}. - This drive was skipped." -f $Global:Drive, $Global:GetBitlockerVolumeStatus)
+				Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 2
+			}
 		}
 	}
 	Catch {
 		$ErrMsg = ("Whoopsie... Something failed at line {0}: {1}" -f $_.InvocationInfo.ScriptLineNumber, $_.Exception.Message)
 		Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $ErrMsg) -Severity 3
-		Write-Output ("ERROR: {0}" -f $ErrMsg)
-		Exit 1
+		$Global:OutputMsgArray += ("ERROR: {0}" -f $ErrMsg)
+		$Global:ExitCode = 1
 	}
 }
 
@@ -339,6 +381,9 @@ Function Check-EventLog {
 		[Parameter(Mandatory=$false, HelpMessage = "Specify an event provider name (Mandatory)")]
 		[String]$EventProviderName = $Global:DefaultEventProviderName,
 
+		[Parameter(Mandatory=$false, HelpMessage = "Specify an event message (Mandatory)")]
+		[String]$EventMessage = ("$Global:DefaultEventMessage" -f $Global:Drive),
+
 		[Parameter(Mandatory=$false, HelpMessage = "Specify an event timestamp (Mandatory)")]
 		[DateTime]$EventTime = $Global:DefaultEventTime,
 
@@ -365,6 +410,13 @@ Function Check-EventLog {
 			$Msg = "The event provider name parameter is null or empty. - Please specify a valid event provider name."
 			Throw $Msg
 		}
+
+		## The script checks that the specified event message parameter is not null or empty.
+		If (([String]::IsNullOrWhitespace($EventMessage))) {
+			$Msg = "The event message parameter is null or empty. - Please specify a valid event message."
+			Throw $Msg
+		}
+
 		## The script checks that the specified event ID parameter is not null or empty.
 		If (!($EventID)) {
 			$Msg = "The event ID parameter is null or empty. - Please specify a valid event ID."
@@ -372,7 +424,7 @@ Function Check-EventLog {
 		}
 
 		## The script checks the event log for events that match the specified event ID.
-		$GetEventID = (Get-WinEvent -ProviderName $EventProviderName -ErrorAction 'SilentlyContinue' | Where-Object {($_.TimeCreated -gt $EventTime) -and ($_.ID -match $EventID)}).ID | Sort-Object -Unique
+		$GetEventID = (Get-WinEvent -ProviderName $EventProviderName -ErrorAction 'SilentlyContinue' | Where-Object {($_.TimeCreated -gt $EventTime) -and ($_.Message -match $EventMessage)}).ID | Sort-Object -Unique
 
 		If (($GetEventID -eq $EventID)) {
 			$Msg = ("The event ID '{0}' was found in the event log." -f $EventID)
@@ -447,7 +499,7 @@ Function Check-RegistryKey {
 		[String]$Key = $Global:DefaultRegistryKey,
 
 		[Parameter(Mandatory=$false, HelpMessage = "Specify a registry name (Optional)")]
-		[String]$Name = $Global:DefaultRegistryName,
+		[String]$Name = ("$Global:DefaultRegistryName" -f $Global:Drive -replace '[:]',''),
 
 		[Parameter(Mandatory=$false, HelpMessage = "Sepcify a registry value (Optional)")]
 		[String]$Value = $Global:DefaultRegistryValue
@@ -536,11 +588,11 @@ Function Check-RegistryKey {
 
 Function Check-BitlockerProtectionStatus {
 	Try {
-		$Msg = ("The script detects if the system drive '{0}' is protected by Bitlocker." -f $Global:SystemDrive)
+		$Msg = ("The script detects if the drive '{0}' is protected by Bitlocker." -f $Global:Drive)
 		Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -ComponentName ("{0}-({1})" -f $Global:LogComponent, $MyInvocation.MyCommand.Name)
 
-		## The script is detecting if the system drive (For example, 'C:') is protected by Bitlocker.
-		$Global:GetBitlockerProtectionStatus = (Get-BitLockerVolume -MountPoint $Global:SystemDrive).ProtectionStatus
+		## The script is detecting if the drive (For example, 'C:') is protected by Bitlocker.
+		$Global:GetBitlockerProtectionStatus = (Get-BitLockerVolume -MountPoint $Global:Drive).ProtectionStatus
 
 		## Return result
 		Return $Global:GetBitlockerProtectionStatus
@@ -552,5 +604,62 @@ Function Check-BitlockerProtectionStatus {
 	}
 }
 
+Function Check-BitlockerVolumeStatus {
+	Try {
+		$Msg = ("The script detects if the drive '{0}' is fully encrypted by Bitlocker." -f $Global:Drive)
+		Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -ComponentName ("{0}-({1})" -f $Global:LogComponent, $MyInvocation.MyCommand.Name)
+
+		## The script is detecting if the drive (For example, 'C:') is fully encrypted by Bitlocker.
+		$Global:GetBitlockerVolumeStatus = (Get-BitLockerVolume -MountPoint $Global:Drive).VolumeStatus
+
+		If (([String]::IsNullOrWhitespace($GetBitlockerVolumeStatus))) {
+			$Global:GetBitlockerVolumeStatus = "Unknown"
+		}
+
+		## Return result
+		Return $Global:GetBitlockerVolumeStatus
+	}
+	Catch {
+		$ErrMsg = ("The function called '{0}' failed at line {1}: {2}" -f $MyInvocation.MyCommand.Name, $_.InvocationInfo.ScriptLineNumber, $_.Exception.Message)
+		Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $ErrMsg) -ComponentName ("{0}-({1})" -f $Global:LogComponent, $MyInvocation.MyCommand.Name) -Severity 3
+		Write-Error $ErrMsg -ErrorAction 'Stop'
+	}
+}
+
+Function Exit-Script {
+	Param (
+		[Parameter(Mandatory=$true, HelpMessage="Provide an exit code (Mandatory)")]
+		[ValidateNotNullOrEmpty()]
+		[String]$ExitCode,
+
+		[Parameter(Mandatory=$false, HelpMessage = "Specify an exit message (Optional)")]
+		[ValidateNotNullOrEmpty()]
+		[String]$ExitMessage = ("[Exit code '{0}' - Remediation is required. Please check the log for more details.]" -f $ExitCode)
+	)
+
+	## Exit script
+	If (($ExitCode -eq 0)) {
+		$Msg = ("Exit code '{0}' - Remediation is not required." -f $ExitCode)
+		Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -ComponentName ("{0}-({1})" -f $Global:LogComponent, $MyInvocation.MyCommand.Name)
+		Write-Output ("[{0} Please check the log for more details.]" -f $Msg)
+		Exit $ExitCode
+	}
+	Else {
+		$Msg = ("Exit code '{0}' - Remediation is required." -f $ExitCode)
+		Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -ComponentName ("{0}-({1})" -f $Global:LogComponent, $MyInvocation.MyCommand.Name) -Severity 2
+		Write-Output ("{0}" -f $ExitMessage)
+		Exit $ExitCode
+	}
+}
+
 ## Invoke detection
 & $Detection
+
+## Exit
+If (($Global:OutputMsgArray)) {
+	$OutputMsg = '[{0}]' -f ($Global:OutputMsgArray -join '] + [')
+	Exit-Script -ExitCode $Global:ExitCode -ExitMessage $OutputMsg
+}
+Else {
+	Exit-Script -ExitCode $Global:ExitCode
+}
