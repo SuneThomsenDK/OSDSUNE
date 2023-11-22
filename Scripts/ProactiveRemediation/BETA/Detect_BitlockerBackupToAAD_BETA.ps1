@@ -161,7 +161,7 @@
 	[Array]$OutputMsgArray = $Null
 	[Array]$OutputMsgArray = @()
 
-		## The script checks if it is executed during the OOBE stage.
+		## The script checks if it is executed during the Out of Box Experience (OOBE).
 		If (((Get-Process -Name explorer -IncludeUserName).UserName -like "*DefaultUser*")) {
 			[Bool]$Global:RunningInOOBE = $true
 		}

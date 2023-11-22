@@ -204,7 +204,7 @@
 	[Bool]$Global:SkipPrereq = $false ## <---- Change this to "$true" if you want the script to skip the prerequisite check. (Default is $false)
 	[Bool]$Global:CheckAllDrives = $false ## <---- Change this to "$true" if you want the script to check all available fixed drives. (Default is $false)
 
-		## The script checks if it is executed during the OOBE stage.
+		## The script checks if it is executed during the Out of Box Experience (OOBE).
 		If (((Get-Process -Name explorer -IncludeUserName).UserName -like "*DefaultUser*")) {
 			[Bool]$Global:RunningInOOBE = $true
 		}
