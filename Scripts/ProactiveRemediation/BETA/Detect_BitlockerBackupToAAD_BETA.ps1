@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS
-	The detection script is used to check if the Bitlocker recovery key(s) is stored in Azure AD.
+	The detection script is used to check if the BitLocker recovery key(s) is stored in Azure AD.
 
 .DESCRIPTION
-	The detection script will check if the device is protected by Bitlocker and if the Bitlocker recovery key(s) is stored in Azure AD.
+	The detection script will check if the device is protected by BitLocker and if the BitLocker recovery key(s) is stored in Azure AD.
 
 	-------------------------------------------------------
 	Proactive Remediation Information
@@ -23,11 +23,11 @@
 	Scenario: The script is not running in 64-bit PowerShell.
 	Output: "PREREQ: The script is not running in 64-bit PowerShell. - Please run the script in 64-bit PowerShell."
 
-	Scenario: The drive (For example, 'C:') is not protected by Bitlocker.
-	Output: "NOT PROTECTED: Bitlocker protection status on drive 'C:' is = Off. - Please ensure that the Bitlocker protection is turned on and not temporarily suspended."
+	Scenario: The drive (For example, 'C:') is not protected by BitLocker.
+	Output: "NOT PROTECTED: BitLocker protection status on drive 'C:' is = Off. - Please ensure that the BitLocker protection is turned on and not temporarily suspended."
 
-	Scenario: Bitlocker recovery key(s) is not stored in Azure AD.
-	Output: "PROTECTED - START REMEDIATION: Bitlocker recovery key(s) is not stored in Azure AD. - Starting remediation script..."
+	Scenario: BitLocker recovery key(s) is not stored in Azure AD.
+	Output: "PROTECTED - RUN REMEDIATION: BitLocker recovery key(s) is not stored in Azure AD. - Run remediation script..."
 
 	Scenario: The proactive remediation script failed.
 	Output: "ERROR: Whoopsie... Something failed at line 36: Error message"
@@ -101,13 +101,13 @@
 		Check-RegistryKey -Key "HKCR:\MIME\Database\Content Type\application/hta" -Name "Extension" -Value ""
 		Check-RegistryKey -Key "HKCR:\MIME\Database\Content Type\application/hta" -Name "" -Value ""
 
-	Function (Check-BitlockerProtectionStatus)
+	Function (Check-BitLockerProtectionStatus)
 
-		This function is called to check if the drive (For example, 'C:') is protected by Bitlocker.
+		This function is called to check if the drive (For example, 'C:') is protected by BitLocker.
 
-	Function (Check-BitlockerVolumeStatus)
+	Function (Check-BitLockerVolumeStatus)
 
-		This function is called to check if the drive (For example, 'C:') is fully encrypted by Bitlocker.
+		This function is called to check if the drive (For example, 'C:') is fully encrypted by BitLocker.
 
 	Function (Exit-Script)
 
@@ -123,23 +123,25 @@
 
 .NOTES
 	Created on:   26-11-2021
-	Modified:     09-06-2023
+	Modified:     21-11-2023
 	Author:       Sune Thomsen
-	Version:      3.0 BETA
+	Version:      3.2_BETA
 	Mail:         stn@mindcore.dk
 	Twitter:      https://twitter.com/SuneThomsenDK
 
 	Changelog:
 	----------
 	26-11-2021 - v1.0 - The Creation date of this script
-	03-05-2022 - v1.1 - Detection for Bitlocker protection status added to the script
+	03-05-2022 - v1.1 - Detection for BitLocker protection status added to the script
 	17-06-2022 - v1.2 - New logic and better reporting have been added to the script
 	07-10-2022 - v1.3 - Code review and cleanup of the script
 	09-10-2022 - v1.4 - Minor changes to the script output
-	20-10-2022 - v1.5 - Minor changes to the detection of Bitlocker protection status and script output
+	20-10-2022 - v1.5 - Minor changes to the detection of BitLocker protection status and script output
 	09-12-2022 - v2.0 - The script has been rewritten and now contains a prerequisite check, new logic, structure, functions, etc.
 	04-05-2022 - v2.1 - Minor changes to the Write-Log function.
-	09-06-2023 - v3.0 BETA - The script has been rewritten to support multiple fixed drives. -> Set the "$Global:CheckAllDrives" to "$true" under "Set system variable(s)" if you want the script to check all available fixed drives.
+	09-06-2023 - v3.0 - The script has been rewritten to support multiple fixed drives. -> Set the "$Global:CheckAllDrives" to "$true" under "Set system variable(s)" if you want the script to check all available fixed drives.
+	06-10-2023 - v3.1 - Minor changes to the script output
+	21-11-2023 - v3.2_BETA - The LogMaxSize has been increased to 500KB, and a new prerequisite check for determining if the script is executed during the Out of Box Experience (OOBE) has been added.
 
 .LINK
 	https://github.com/SuneThomsenDK
@@ -151,11 +153,23 @@
 	## Set system variable(s)
 	[String]$Global:ScriptName = $MyInvocation.MyCommand.Name
 	[String]$Global:UserName = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+	## [String]$Global:ExplorerProcess = (Get-Process -Name explorer -IncludeUserName).UserName
 	[Bool]$Global:IsPowerShell64bitVersion = [Environment]::Is64BitProcess
 	[Bool]$Global:IsSystemContext = [System.Security.Principal.WindowsIdentity]::GetCurrent().IsSystem
 	[Bool]$Global:SkipPrereq = $false ## <---- Change this to "$true" if you want the script to skip the prerequisite check. (Default is $false)
 	[Bool]$Global:CheckAllDrives = $false ## <---- Change this to "$true" if you want the script to check all available fixed drives. (Default is $false)
+	[Array]$OutputMsgArray = $Null
+	[Array]$OutputMsgArray = @()
 
+		## The script checks if it is executed during the OOBE stage.
+		If (((Get-Process -Name explorer -IncludeUserName).UserName -like "*DefaultUser*")) {
+			[Bool]$Global:RunningInOOBE = $true
+		}
+		Else {
+			[Bool]$Global:RunningInOOBE = $false
+		}
+
+		## The script is gathering drive information.
 		If (($Global:CheckAllDrives)) {
 			[Array]$Global:GetDrives = (get-wmiobject -class win32_logicaldisk | where {$_.DriveType -eq "3"}).DeviceID
 		}
@@ -167,12 +181,12 @@
 	[String]$Global:LogLocation = "$env:ProgramData\Microsoft\IntuneManagementExtension\Logs"
 	[String]$Global:LogName = "IntuneProactiveRemediation"
 	[String]$Global:LogComponent = "DetectionScript"
-	[String]$Global:LogSubject = "Bitlocker Backup to AAD"
-	[Int]$Global:LogMaxSize = 250KB
+	[String]$Global:LogSubject = "BitLocker Backup to AAD"
+	[Int]$Global:LogMaxSize = 500KB
 
 	## Set registry variable(s)
-	[String]$Global:DefaultRegistryKey = "HKLM:\SOFTWARE\CompanyName\Bitlocker" ## <---- Change "CompanyName" to your own company name.
-	[String]$Global:DefaultRegistryName = "Drive_{0}_BitlockerBackupToAAD"
+	[String]$Global:DefaultRegistryKey = "HKLM:\SOFTWARE\CompanyName\BitLocker" ## <---- Change "CompanyName" to your own company name.
+	[String]$Global:DefaultRegistryName = "Drive_{0}_BitLockerBackupToAAD"
 	[String]$Global:DefaultRegistryValue = "True"
 
 	## Set event log variable(s)
@@ -184,28 +198,38 @@
 	## Set exit variable(s)
 	[Int]$Global:ExitCode = 0
 
+	## ----------------------------------------------------------------------- ##
+	## Do NOT make changes below this line unless you know what you are doing! ##
+	## ----------------------------------------------------------------------- ##
+
 ## Detection
 $Detection = {
-	## Detection - Do NOT make changes below this line unless you know what you are doing!
-	$Msg = (" ----------------------------------------------------- Invoke Detection ({0}) ----------------------------------------------------- " -f $Global:UserName)
+	## Invoke detection
+	$Msg = (" ------------------------------------------------------------- Invoke Detection ({0}) ------------------------------------------------------------- " -f $Global:UserName)
 	Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg)
 
 	Try {
-		## The script checks whether it runs under the system account and in the 64-bit version of PowerShell.
-		$Msg = "The script checks whether it runs under the system account and in the 64-bit version of PowerShell."
+		## The script checks whether it runs in the system context and the 64-bit version of PowerShell and if it is executed during the Out of Box Experience (OOBE).
+		$Msg = "The script checks whether it runs in the system context and the 64-bit version of PowerShell and if it is executed during the Out of Box Experience (OOBE)."
 		Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg)
 
 		If (!($Global:SkipPrereq)) {
 			If (!($Global:IsSystemContext)) {
 				$Msg = "The script is not running under the system account. - Please run the script as system."
 				Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 3
-				$Global:OutputMsg = ("PREREQ: {0}" -f $Msg)
+				$Global:OutputMsgArray += ("PREREQ: {0}" -f $Msg)
 				$Global:ExitCode = 1
 			}
 			ElseIf (!($Global:IsPowerShell64bitVersion)) {
 				$Msg = "The script is not running in 64-bit PowerShell. - Please run the script in 64-bit PowerShell."
 				Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 3
-				$Global:OutputMsg = ("PREREQ: {0}" -f $Msg)
+				$Global:OutputMsgArray += ("PREREQ: {0}" -f $Msg)
+				$Global:ExitCode = 1
+			}
+			ElseIf (($Global:RunningInOOBE)) {
+				$Msg = "The script was executed during the Out of Box Experience (OOBE). - Don't worry! No action is needed if the script is configured to recur hourly or daily."
+				Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 2
+				$Global:OutputMsgArray += ("PREREQ: {0}" -f $Msg)
 				$Global:ExitCode = 1
 			}
 			Else {
@@ -214,6 +238,7 @@ $Detection = {
 			}
 
 			If (!($Global:ExitCode -eq 0)) {
+				$OutputMsg = '[{0}]' -f ($Global:OutputMsgArray -join '] + [')
 				Exit-Script -ExitCode $Global:ExitCode -ExitMessage $OutputMsg
 			}
 		}
@@ -223,39 +248,39 @@ $Detection = {
 		}
 
 		Foreach ($Global:Drive in $Global:GetDrives) {
-			## The script is detecting if the drive (For example, 'C:') is protected and fully encrypted by Bitlocker.
-			If (((Check-BitlockerVolumeStatus) -match 'FullyEncrypted')) {
-				$Msg = ("Drive '{0}' is fully encrypted by Bitlocker. - The script will continue..." -f $Global:Drive)
+			## The script is detecting if the drive (For example, 'C:') is protected and fully encrypted by BitLocker.
+			If (((Check-BitLockerVolumeStatus) -match 'FullyEncrypted')) {
+				$Msg = ("Drive '{0}' is fully encrypted by BitLocker. - The script will continue..." -f $Global:Drive)
 				Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg)
 			
-				If (((Check-BitlockerProtectionStatus) -eq 'On')) {
-					$Msg = ("Drive '{0}' is protected by Bitlocker. - The script will continue..." -f $Global:Drive)
+				If (((Check-BitLockerProtectionStatus) -eq 'On')) {
+					$Msg = ("Drive '{0}' is protected by BitLocker. - The script will continue..." -f $Global:Drive)
 					Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg)
 
-					## The script checks the event log or the registry to see if the Bitlocker recovery key(s) has been stored in Azure AD.
-					$Msg = "The script checks the event log or registry to see if the Bitlocker recovery key(s) has been stored in Azure AD."
+					## The script checks the event log or the registry to see if the BitLocker recovery key(s) has been stored in Azure AD.
+					$Msg = "The script checks the event log or registry to see if the BitLocker recovery key(s) has been stored in Azure AD."
 					Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg)
 
 					If (((Check-EventLog)) -or ((Check-RegistryKey))) {
-						$Msg = ("Bitlocker recovery key(s) from drive '{0}' is stored in Azure AD, do nothing." -f $Global:Drive)
+						$Msg = ("BitLocker recovery key(s) from drive '{0}' is stored in Azure AD, do nothing." -f $Global:Drive)
 						Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg)
 					}
 					Else {
-						$Msg = ("Bitlocker recovery key(s) from drive '{0}' is not stored in Azure AD. - Starting remediation script..." -f $Global:Drive)
+						$Msg = ("BitLocker recovery key(s) from drive '{0}' is not stored in Azure AD. - Run remediation script..." -f $Global:Drive)
 						Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 2
-						$Global:OutputMsg = ("PROTECTED - START REMEDIATION: {0}" -f $Msg)
+						$Global:OutputMsgArray += ("PROTECTED - RUN REMEDIATION: {0}" -f $Msg)
 						$Global:ExitCode = 1
 					}
 				}
 				Else {
-					$Msg = ("Bitlocker protection status of drive '{0}' is = {1}. - Please ensure that the Bitlocker protection is turned on and not temporarily suspended." -f $Global:Drive, $Global:GetBitlockerProtectionStatus)
+					$Msg = ("BitLocker protection status of drive '{0}' is = {1}. - Please ensure that the BitLocker protection is turned on and not temporarily suspended." -f $Global:Drive, $Global:GetBitLockerProtectionStatus)
 					Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 3
-					$Global:OutputMsg = ("NOT PROTECTED: {0}" -f $Msg)
+					$Global:OutputMsgArray += ("NOT PROTECTED: {0}" -f $Msg)
 					$Global:ExitCode = 1
 				}
 			}
 			Else {
-				$Msg = ("Bitlocker encryption status of drive '{0}' is = {1}. - This drive was skipped." -f $Global:Drive, $Global:GetBitlockerVolumeStatus)
+				$Msg = ("BitLocker encryption status of drive '{0}' is = {1}. - This drive was skipped." -f $Global:Drive, $Global:GetBitLockerVolumeStatus)
 				Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 2
 			}
 		}
@@ -263,7 +288,7 @@ $Detection = {
 	Catch {
 		$ErrMsg = ("Whoopsie... Something failed at line {0}: {1}" -f $_.InvocationInfo.ScriptLineNumber, $_.Exception.Message)
 		Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $ErrMsg) -Severity 3
-		$Global:OutputMsg = ("ERROR: {0}" -f $ErrMsg)
+		$Global:OutputMsgArray += ("ERROR: {0}" -f $ErrMsg)
 		$Global:ExitCode = 1
 	}
 }
@@ -578,16 +603,16 @@ Function Check-RegistryKey {
 	}
 }
 
-Function Check-BitlockerProtectionStatus {
+Function Check-BitLockerProtectionStatus {
 	Try {
-		$Msg = ("The script detects if the drive '{0}' is protected by Bitlocker." -f $Global:Drive)
+		$Msg = ("The script detects if the drive '{0}' is protected by BitLocker." -f $Global:Drive)
 		Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -ComponentName ("{0}-({1})" -f $Global:LogComponent, $MyInvocation.MyCommand.Name)
 
-		## The script is detecting if the drive (For example, 'C:') is protected by Bitlocker.
-		$Global:GetBitlockerProtectionStatus = (Get-BitLockerVolume -MountPoint $Global:Drive).ProtectionStatus
+		## The script is detecting if the drive (For example, 'C:') is protected by BitLocker.
+		$Global:GetBitLockerProtectionStatus = (Get-BitLockerVolume -MountPoint $Global:Drive).ProtectionStatus
 
 		## Return result
-		Return $Global:GetBitlockerProtectionStatus
+		Return $Global:GetBitLockerProtectionStatus
 	}
 	Catch {
 		$ErrMsg = ("The function called '{0}' failed at line {1}: {2}" -f $MyInvocation.MyCommand.Name, $_.InvocationInfo.ScriptLineNumber, $_.Exception.Message)
@@ -596,16 +621,20 @@ Function Check-BitlockerProtectionStatus {
 	}
 }
 
-Function Check-BitlockerVolumeStatus {
+Function Check-BitLockerVolumeStatus {
 	Try {
-		$Msg = ("The script detects if the drive '{0}' is fully encrypted by Bitlocker." -f $Global:Drive)
+		$Msg = ("The script detects if the drive '{0}' is fully encrypted by BitLocker." -f $Global:Drive)
 		Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -ComponentName ("{0}-({1})" -f $Global:LogComponent, $MyInvocation.MyCommand.Name)
 
-		## The script is detecting if the drive (For example, 'C:') is fully encrypted by Bitlocker.
-		$Global:GetBitlockerVolumeStatus = (Get-BitLockerVolume -MountPoint $Global:Drive).VolumeStatus
+		## The script is detecting if the drive (For example, 'C:') is fully encrypted by BitLocker.
+		$Global:GetBitLockerVolumeStatus = (Get-BitLockerVolume -MountPoint $Global:Drive).VolumeStatus
+
+		If (([String]::IsNullOrWhitespace($GetBitLockerVolumeStatus))) {
+			$Global:GetBitLockerVolumeStatus = "Unknown"
+		}
 
 		## Return result
-		Return $Global:GetBitlockerVolumeStatus
+		Return $Global:GetBitLockerVolumeStatus
 	}
 	Catch {
 		$ErrMsg = ("The function called '{0}' failed at line {1}: {2}" -f $MyInvocation.MyCommand.Name, $_.InvocationInfo.ScriptLineNumber, $_.Exception.Message)
@@ -615,36 +644,37 @@ Function Check-BitlockerVolumeStatus {
 }
 
 Function Exit-Script {
-    Param (
-        [Parameter(Mandatory=$true, HelpMessage="Provide an exit code (Mandatory)")]
+	Param (
+		[Parameter(Mandatory=$true, HelpMessage="Provide an exit code (Mandatory)")]
 		[ValidateNotNullOrEmpty()]
 		[String]$ExitCode,
 
 		[Parameter(Mandatory=$false, HelpMessage = "Specify an exit message (Optional)")]
 		[ValidateNotNullOrEmpty()]
-		[String]$ExitMessage = ("Exit code '{0}' - Remediation is required. Please check the log for more details." -f $ExitCode)
-    )
+		[String]$ExitMessage = ("[Exit code '{0}' - Remediation is required. Please check the log for more details.]" -f $ExitCode)
+	)
 
-    ## Exit script
-    If (($ExitCode -eq 0)) {
+	## Exit script
+	If (($ExitCode -eq 0)) {
 		$Msg = ("Exit code '{0}' - Remediation is not required." -f $ExitCode)
 		Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -ComponentName ("{0}-({1})" -f $Global:LogComponent, $MyInvocation.MyCommand.Name)
-		Write-Output ("{0} Please check the log for more details." -f $Msg)
-        Exit $ExitCode
-    }
+		Write-Output ("[{0} Please check the log for more details.]" -f $Msg)
+		Exit $ExitCode
+	}
 	Else {
 		$Msg = ("Exit code '{0}' - Remediation is required." -f $ExitCode)
 		Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -ComponentName ("{0}-({1})" -f $Global:LogComponent, $MyInvocation.MyCommand.Name) -Severity 2
 		Write-Output ("{0}" -f $ExitMessage)
-        Exit $ExitCode
-    }
+		Exit $ExitCode
+	}
 }
 
 ## Invoke detection
 & $Detection
 
 ## Exit
-If (($OutputMsg)) {
+If (($Global:OutputMsgArray)) {
+	$OutputMsg = '[{0}]' -f ($Global:OutputMsgArray -join '] + [')
 	Exit-Script -ExitCode $Global:ExitCode -ExitMessage $OutputMsg
 }
 Else {
