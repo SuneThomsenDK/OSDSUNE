@@ -163,12 +163,7 @@
 		Valid example(s):
 		Exit-Script -ExitCode "1" -ExitMessage "Remediation is required."
 
-.PARAMETER
-
-.EXAMPLE
-
-.NOTES
-
+# NOTES
 
 	Created on:   26-11-2021
 	Modified:     27-05-2025
