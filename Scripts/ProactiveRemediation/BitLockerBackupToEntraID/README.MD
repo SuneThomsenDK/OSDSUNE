@@ -1,8 +1,8 @@
-# SYNOPSIS
+# .SYNOPSIS
 
 	The remediation script is used to back up the BitLocker recovery key(s) to Entra ID.
 
-# DESCRIPTION
+# .DESCRIPTION
 
 	The remediation script will check if the device is protected by BitLocker and attempt to back up the BitLocker recovery key(s) to Entra ID.
 
@@ -162,8 +162,13 @@
 
 		Valid example(s):
 		Exit-Script -ExitCode "1" -ExitMessage "Remediation is required."
+# .PARAMETER
+	N/A
 
-# NOTES
+# .EXAMPLE
+	N/A
+
+# .NOTES
 
 	Created on:   26-11-2021
 	Modified:     27-05-2025
