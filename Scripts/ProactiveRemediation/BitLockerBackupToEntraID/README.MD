@@ -168,6 +168,8 @@ The remediation script will check if the device is protected by BitLocker and at
 .EXAMPLE
 
 .NOTES
+
+
 	Created on:   26-11-2021
 	Modified:     27-05-2025
 	Author:       Sune Thomsen
