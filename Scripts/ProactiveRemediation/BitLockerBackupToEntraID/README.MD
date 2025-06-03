@@ -5,6 +5,7 @@ The remediation script is used to back up the BitLocker recovery key(s) to Entra
 .DESCRIPTION
 
 The remediation script will check if the device is protected by BitLocker and attempt to back up the BitLocker recovery key(s) to Entra ID.
+
 	-------------------------------------------------------
 	Proactive Remediation Information
 	-------------------------------------------------------
