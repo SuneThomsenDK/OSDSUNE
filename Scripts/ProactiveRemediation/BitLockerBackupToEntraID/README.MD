@@ -162,6 +162,7 @@
 
 		Valid example(s):
 		Exit-Script -ExitCode "1" -ExitMessage "Remediation is required."
+
 # .PARAMETER
 	N/A
 
