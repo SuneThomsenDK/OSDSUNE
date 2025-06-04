@@ -9,16 +9,16 @@
 	Looking for a detailed implementation guidance? - See https://www.osdsune.com/home/blog/microsoft-intune/how-to-migrate-bitlocker-key-s-from-all-fixed-drives-to-microsoft-entra-id.
 
 	-------------------------------------------------------
-	Proactive Remediation Information
+	Remediations Information
 	-------------------------------------------------------
-	Required settings for the script package in Endpoint analytics | Proactive remediations.
+	Required settings for the script package in Devices | Scripts and remediations.
 
 		Run this script using the logged-on credentials: No
 		Enforce script signature check: No
 		Run script in 64-bit PowerShell: Yes
 
 	-------------------------------------------------------
-	Proactive Remediation Scenarios and detection output
+	Remediations Scenarios and detection output
 	-------------------------------------------------------
 	Scenario: The script is not running in system context.
 	Output: "PREREQ: The script is not running in system context. - Please run the script as system."
@@ -32,11 +32,11 @@
 	Scenario: BitLocker recovery key(s) is not stored in Entra ID.
 	Output: "PROTECTED - RUN REMEDIATION: BitLocker recovery key(s) is not stored in Entra ID. - Run remediation script..."
 
-	Scenario: The proactive remediation script failed.
+	Scenario: The remediation script failed.
 	Output: "ERROR: Whoopsie... Something failed at line 36: Error message"
 
 	-------------------------------------------------------
-	Proactive Remediation Functions
+	Remediations Functions
 	-------------------------------------------------------
 	Function (Write-Log)
 
