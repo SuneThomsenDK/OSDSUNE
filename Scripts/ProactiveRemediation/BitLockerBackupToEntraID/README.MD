@@ -6,6 +6,8 @@
 
 	The remediation script will check if the device is protected by BitLocker and attempt to back up the BitLocker recovery key(s) to Entra ID.
 
+	Looking for a detailed implementation guidance? - See https://www.osdsune.com/home/blog/microsoft-intune/how-to-migrate-bitlocker-key-s-from-all-fixed-drives-to-microsoft-entra-id.
+
 	-------------------------------------------------------
 	Proactive Remediation Information
 	-------------------------------------------------------
