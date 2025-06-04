@@ -175,7 +175,7 @@
 	Version:      3.2
 	Mail:         sune.thomsen@outlook.com
 	LinkedIn:     https://www.linkedin.com/in/sunethomsendk/
-    Bluesky:      https://bsky.app/profile/sunethomsendk.bsky.social
+	Bluesky:      https://bsky.app/profile/sunethomsendk.bsky.social
 	X (Twitter):  https://twitter.com/SuneThomsenDK
 
 	Changelog:
