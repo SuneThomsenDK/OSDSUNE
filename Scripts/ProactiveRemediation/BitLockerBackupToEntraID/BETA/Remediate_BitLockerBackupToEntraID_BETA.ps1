@@ -5,17 +5,19 @@
 .DESCRIPTION
 	The remediation script will check if the device is protected by BitLocker and attempt to back up the BitLocker recovery key(s) to Entra ID.
 
+	Looking for a detailed implementation guidance? - See https://www.osdsune.com/home/blog/microsoft-intune/how-to-migrate-bitlocker-key-s-from-all-fixed-drives-to-microsoft-entra-id.
+
 	-------------------------------------------------------
-	Proactive Remediation Information
+	Remediations Information
 	-------------------------------------------------------
-	Required settings for the script package in Endpoint analytics | Proactive remediations.
+	Required settings for the script package in Devices | Scripts and remediations.
 
 		Run this script using the logged-on credentials: No
 		Enforce script signature check: No
 		Run script in 64-bit PowerShell: Yes
 
 	-------------------------------------------------------
-	Proactive Remediation Scenarios and detection output
+	Remediations Scenarios and detection output
 	-------------------------------------------------------
 	Scenario: The script is not running in system context.
 	Output: "PREREQ: The script is not running in system context. - Please run the script as system."
@@ -29,11 +31,11 @@
 	Scenario: BitLocker recovery key(s) is not stored in Entra ID.
 	Output: "PROTECTED - RUN REMEDIATION: BitLocker recovery key(s) is not stored in Entra ID. - Run remediation script..."
 
-	Scenario: The proactive remediation script failed.
+	Scenario: The remediation script failed.
 	Output: "ERROR: Whoopsie... Something failed at line 36: Error message"
 
 	-------------------------------------------------------
-	Proactive Remediation Functions
+	Remediations Functions
 	-------------------------------------------------------
 	Function (Write-Log)
 
@@ -168,11 +170,13 @@
 
 .NOTES
 	Created on:   26-11-2021
-	Modified:     27-05-2025
+	Modified:     04-06-2025
 	Author:       Sune Thomsen
 	Version:      3.3_BETA
-	Mail:         stn@mindcore.dk
-	Twitter:      https://twitter.com/SuneThomsenDK
+	Mail:         sune.thomsen@outlook.com
+	LinkedIn:     https://www.linkedin.com/in/sunethomsendk/
+	Bluesky:      https://bsky.app/profile/sunethomsendk.bsky.social
+	X (Twitter):  https://twitter.com/SuneThomsenDK
 
 	Changelog:
 	----------
@@ -186,8 +190,8 @@
 	04-05-2022 - v2.1 - Minor changes to the Write-Log function.
 	09-06-2023 - v3.0 - The script has been rewritten to support multiple fixed drives. -> Set the "$Global:CheckAllDrives" to "$true" under "Set system variable(s)" if you want the script to check all available fixed drives.
 	06-10-2023 - v3.1 - Minor changes to the script output
-	21-11-2023 - v3.2_BETA - The LogMaxSize has been increased to 500KB, and a new prerequisite check for determining if the script is executed during the Out of Box Experience (OOBE) has been added.
-	27-05-2025 - v3.3_BETA - Replaced "Azure AD" with "Entra ID" throughout the script and added new detection logic for event log messages.
+	27-05-2025 - v3.2 - Replaced "Azure AD" with "Entra ID" throughout the script and added new detection logic for event log messages.
+	04-06-2025 - v3.3_BETA - The LogMaxSize has been increased to 500KB, and a new prerequisite check for determining if the script is executed during the Out of Box Experience (OOBE) has been added.
 
 .LINK
 	https://github.com/SuneThomsenDK
@@ -199,7 +203,7 @@
 	## Set system variable(s)
 	[String]$Global:ScriptName = $MyInvocation.MyCommand.Name
 	[String]$Global:UserName = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-	## [String]$Global:ExplorerProcess = (Get-Process -Name explorer -IncludeUserName).UserName
+	[String]$Global:ExplorerProcessUser = (Get-Process -Name explorer -IncludeUserName -ErrorAction 'SilentlyContinue').UserName
 	[String]$Global:OSVersion = "{0}.{1}.{2}.{3}" -f ('CurrentMajorVersionNumber','CurrentMinorVersionNumber','CurrentBuild','UBR' | ForEach-Object {Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion' -Name $_})
 	[Bool]$Global:IsPowerShell64bitVersion = [Environment]::Is64BitProcess
 	[Bool]$Global:IsSystemContext = [System.Security.Principal.WindowsIdentity]::GetCurrent().IsSystem
@@ -207,7 +211,7 @@
 	[Bool]$Global:CheckAllDrives = $false ## <---- Change this to "$true" if you want the script to check all available fixed drives. (Default is $false)
 
 		## The script checks if it is executed during the Out of Box Experience (OOBE).
-		If (((Get-Process -Name explorer -IncludeUserName).UserName -like "*DefaultUser*")) {
+		If (($Global:ExplorerProcessUser -like "*DefaultUser*")) {
 			[Bool]$Global:RunningInOOBE = $true
 		}
 		Else {
@@ -328,7 +332,7 @@ $Remediation = {
 							Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg)
 						}
 						Else {
-							$Msg = ("The Proactive Remediation script failed to back up the BitLocker recovery key(s) from drive '{0}' to Entra ID." -f $Global:Drive)
+							$Msg = ("The remediation script failed to back up the BitLocker recovery key(s) from drive '{0}' to Entra ID." -f $Global:Drive)
 							Write-Log -Message ("[{0}]: {1}" -f $Global:LogSubject, $Msg) -Severity 3
 							$Global:ExitCode = 1
 						}
