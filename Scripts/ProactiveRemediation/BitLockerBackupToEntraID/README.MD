@@ -166,9 +166,11 @@
 		Exit-Script -ExitCode "1" -ExitMessage "Remediation is required."
 
 # .PARAMETER
+
 	N/A
 
 # .EXAMPLE
+
 	N/A
 
 # .NOTES
@@ -177,8 +179,10 @@
 	Modified:     27-05-2025
 	Author:       Sune Thomsen
 	Version:      3.2
-	Mail:         stn@mindcore.dk
-	Twitter:      https://twitter.com/SuneThomsenDK
+	Mail:         sune.thomsen@outlook.com
+	LinkedIn:     https://www.linkedin.com/in/sunethomsendk/
+    	Bluesky:      https://bsky.app/profile/sunethomsendk.bsky.social
+	X (Twitter):  https://twitter.com/SuneThomsenDK
 
 	Changelog:
 	----------
