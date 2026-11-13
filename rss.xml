@@ -1,0 +1,18 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Home | OSDeploy | Sune Thomsen</title>
+        <link>https://www.osdsune.com/home</link>
+        <description/>
+        <language>en</language>
+        <lastBuildDate>Fri, 13 Nov 2026 08:27:39 GMT</lastBuildDate>
+        <atom:link href="https://www.osdsune.com/home/rss.xml" rel="self" type="application/rss+xml"/>
+        <item>
+            <title>I love IT!</title>
+            <link>https://www.osdsune.com/home/blog/microsoft-intune/centralized-windows-app-management</link>
+            <description>This is a Test...</description>
+            <guid isPermaLink="false">https://www.osdsune.com/home/blog/microsoft-intune/centralized-windows-app-management</guid>
+            <pubDate>Thu, 12 Nov 2026 00:00:00 GMT</pubDate>
+            <enclosure length="1000000" type="image/jpeg" url="https://images.unsplash.com/photo-1683322499436-f4383dd59f5a?crop=entropy\&cs=srgb\&fm=jpg\&ixid=M3wxOTcwMjR8MHwxfHNlYXJjaHw0fHxJVHxlbnwwfHx8fDE3OTQ1NTc4Njd8MA\&ixlib=rb-4.1.0\&q=85"/>
+        </item>
+    </channel>
+</rss>
