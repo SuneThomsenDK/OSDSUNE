@@ -10,12 +10,12 @@
         <copyright>Copyright 2026</copyright>
         <atom:link href="https://www.osdsune.com/home/rss.xml" rel="self" type="application/rss+xml"/>
         <item>
-            <title>I love IT!</title>
+            <title>Centralized Windows App Management</title>
             <link>https://www.osdsune.com/home/blog/microsoft-intune/centralized-windows-app-management</link>
-            <description>This is a Test...</description>
+            <description>In this blog post, you will learn how to centrally manage Windows App settings on Windows devices using the Microsoft Intune Settings Catalog...</description>
             <guid isPermaLink="false">https://www.osdsune.com/home/blog/microsoft-intune/centralized-windows-app-management</guid>
-            <pubDate>Thu, 12 Nov 2026 00:00:00 GMT</pubDate>
-            <enclosure length="1000000" type="image/jpeg" url="https://images.unsplash.com/photo-1683322499436-f4383dd59f5a?crop=entropy\&cs=srgb\&fm=jpg\&ixid=M3wxOTcwMjR8MHwxfHNlYXJjaHw0fHxJVHxlbnwwfHx8fDE3OTQ1NTc4Njd8MA\&ixlib=rb-4.1.0\&q=85"/>
+            <pubDate>Thu, 6 Nov 2026 00:00:00 GMT</pubDate>
+            <enclosure length="1000000" type="image/jpeg" url="https://www.osdsune.com/home/~gitbook/image?url=https%3A%2F%2F3347085443-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-L_qpqqoWaR3gQAWE4Lk%252Fuploads%252FXT8MZ3D02LFKH9yvzCW4%252FDesigner.png%3Falt%3Dmedia%26token%3D1392de5d-bd13-4e7e-877b-93a14b50c316&width=768&dpr=3&quality=100&sign=ef9ca7dc6486a3a11d58370c35f84824&sv=3"/>
         </item>
     </channel>
 </rss>
