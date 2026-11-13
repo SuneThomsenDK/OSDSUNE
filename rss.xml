@@ -3,17 +3,39 @@
     <channel>
         <title>Home | OSDeploy | Sune Thomsen</title>
         <link>https://www.osdsune.com/home</link>
-        <description/>
-        <language>en</language>
+        <description>Last modified: 06-11-2026 1:07 AM</description>
         <lastBuildDate>Fri, 13 Nov 2026 08:27:39 GMT</lastBuildDate>
+        <docs>https://www.osdsune.com/home</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <copyright>Copyright 2026</copyright>
         <atom:link href="https://www.osdsune.com/home/rss.xml" rel="self" type="application/rss+xml"/>
         <item>
-            <title>I love IT!</title>
-            <link>https://www.osdsune.com/home/blog/microsoft-intune/centralized-windows-app-management</link>
-            <description>This is a Test...</description>
-            <guid isPermaLink="false">https://www.osdsune.com/home/blog/microsoft-intune/centralized-windows-app-management</guid>
+            <title><![CDATA[I love IT!]]></title>
+            <link>https://www.osdsune.com/home#i-love-it</link>
+            <guid isPermaLink="false">https://www.osdsune.com/home#i-love-it</guid>
             <pubDate>Thu, 12 Nov 2026 00:00:00 GMT</pubDate>
-            <enclosure length="1000000" type="image/jpeg" url="https://images.unsplash.com/photo-1683322499436-f4383dd59f5a?crop=entropy\&cs=srgb\&fm=jpg\&ixid=M3wxOTcwMjR8MHwxfHNlYXJjaHw0fHxJVHxlbnwwfHx8fDE3OTQ1NTc4Njd8MA\&ixlib=rb-4.1.0\&q=85"/>
+            <content:encoded><![CDATA[<p>This is a IT test!</p>]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[Cookie Test]]></title>
+            <link>https://www.osdsune.com/home#cookie-test</link>
+            <guid isPermaLink="false">https://www.osdsune.com/home#cookie-test</guid>
+            <pubDate>Fri, 13 Nov 2026 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p>This is a cookie test!</p>]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[I love dogs]]></title>
+            <link>https://www.osdsune.com/home#i-love-dogs</link>
+            <guid isPermaLink="false">https://www.osdsune.com/home#i-love-dogs</guid>
+            <pubDate>Fri, 13 Nov 2026 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p>The is the dog test!</p>]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[I love cats]]></title>
+            <link>https://www.osdsune.com/home#i-love-cats</link>
+            <guid isPermaLink="false">https://www.osdsune.com/home#i-love-cats</guid>
+            <pubDate>Fri, 13 Nov 2026 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p> The is the cat test!</p>]]></content:encoded>
         </item>
     </channel>
 </rss>
